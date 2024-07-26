@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/startFragment">
+
+    <fragment
+        android:id="@+id/startFragment"
+        android:name="com.example.globetrotter.ui.start.StartFragment"
+        android:label="fragment_start"
+        tools:layout="@layout/fragment_start" />
+
+    <fragment
+        android:id="@+id/flightSearchFragment"
+        android:name="com.example.globetrotter.ui.flightSearch.FlightSearchFragment"
+        android:label="fragment_flight_search"
+        tools:layout="@layout/fragment_flight_search" />
+
+    <fragment
+        android:id="@+id/hotelSearchFragment"
+        android:name="com.example.globetrotter.ui.hotelSearch.HotelSearchFragment"
+        android:label="fragment_hotel_search"
+        tools:layout="@layout/fragment_hotel_search" />
+
+    <fragment
+        android:id="@+id/userProfileFragment"
+        android:name="com.example.globetrotter.ui.userProfile.UserProfileFragment"
+        android:label="fragment_user_profile"
+        tools:layout="@layout/fragment_user_profile" />
+
+    <fragment
+        android:id="@+id/discoverActivitiesFragment"
+        android:name="com.example.globetrotter.ui.discoverActivities.DiscoverActivitiesFragment"
+        android:label="fragment_discover_activities"
+        tools:layout="@layout/fragment_discover_activities" />
+
+    <action
+        android:id="@+id/action_startFragment_to_discoverActivitiesFragment"
+        app:destination="@id/discoverActivitiesFragment" />
+</navigation>
