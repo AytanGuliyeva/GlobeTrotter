@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="CircleImageView" parent="MaterialComponents.Sh">
-        <item name="shapeAppearanceOverlay">@style/CircleShape</item>
-    </style>
 
     <style name="CircleShape" parent="ShapeAppearance.MaterialComponents.SmallComponent">
         <item name="cornerFamily">rounded</item>

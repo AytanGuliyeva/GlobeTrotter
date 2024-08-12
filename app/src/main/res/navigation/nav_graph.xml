@@ -3,13 +3,46 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/startFragment">
+    app:startDestination="@id/getStartedFragment">
 
     <fragment
-        android:id="@+id/startFragment"
-        android:name="com.example.globetrotter.ui.start.StartFragment"
-        android:label="fragment_start"
-        tools:layout="@layout/fragment_start" />
+        android:id="@+id/getStartedFragment"
+        android:name="com.example.globetrotter.ui.getStarted.GetStartedFragment"
+        android:label="fragment_get_started"
+        tools:layout="@layout/fragment_get_started" >
+        <action
+            android:id="@+id/action_getStartedFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/getStartedFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.example.globetrotter.ui.signUp.SignUpFragment"
+        android:label="fragment_sign_up"
+        tools:layout="@layout/fragment_sign_up" >
+        <action
+            android:id="@+id/action_signUpFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/signUpFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.globetrotter.ui.login.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_discoverActivitiesFragment"
+            app:destination="@id/discoverActivitiesFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_loginFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/flightSearchFragment"
@@ -27,15 +60,35 @@
         android:id="@+id/userProfileFragment"
         android:name="com.example.globetrotter.ui.userProfile.UserProfileFragment"
         android:label="fragment_user_profile"
-        tools:layout="@layout/fragment_user_profile" />
+        tools:layout="@layout/fragment_user_profile" >
+        <action
+            android:id="@+id/action_userProfileFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
 
     <fragment
         android:id="@+id/discoverActivitiesFragment"
         android:name="com.example.globetrotter.ui.discoverActivities.DiscoverActivitiesFragment"
         android:label="fragment_discover_activities"
         tools:layout="@layout/fragment_discover_activities" />
-
-    <action
-        android:id="@+id/action_startFragment_to_discoverActivitiesFragment"
-        app:destination="@id/discoverActivitiesFragment" />
 </navigation>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

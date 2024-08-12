@@ -2,6 +2,7 @@
 agp = "8.5.0"
 circleimageview = "3.1.0"
 compiler = "4.12.0"
+firebaseBom = "33.1.2"
 glide = "4.16.0"
 dotsindicator = "4.3"
 kotlin = "1.9.0"
@@ -23,6 +24,11 @@ androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx",
 circleimageview = { module = "de.hdodenhof:circleimageview", version.ref = "circleimageview" }
 compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "compiler" }
 dotsindicator = { module = "com.tbuonomo:dotsindicator", version.ref = "dotsindicator" }
+firebase-auth = { module = "com.google.firebase:firebase-auth" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-storage = { module = "com.google.firebase:firebase-storage" }
+firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
+import com.example.globetrotter.R
 import com.example.globetrotter.databinding.FragmentStartBinding
 import com.example.globetrotter.ui.getStarted.GetStartedFragment
 import com.example.globetrotter.ui.getStarted.adapter.ViewPagerAdapter
@@ -22,19 +24,23 @@ class StartFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        val viewPager = binding.viewPager
-        val dotsIndicator = binding.dotsIndicator
-
-        val adapter = ViewPagerAdapter(requireActivity())
-        adapter.addFragment(GetStartedFragment(), "Get Started")
-        adapter.addFragment(LoginFragment(), "Login")
-        adapter.addFragment(SignUpFragment(), "Sign Up")
-
-
-        viewPager.adapter = adapter
-        dotsIndicator.setViewPager2(viewPager)
-    }
+//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+//        super.onViewCreated(view, savedInstanceState)
+//        val viewPager = binding.viewPager
+//        val dotsIndicator = binding.dotsIndicator
+//
+//        val adapter = ViewPagerAdapter(requireActivity())
+//        adapter.addFragment(GetStartedFragment(), "Get Started")
+//        adapter.addFragment(LoginFragment(), "Login")
+//        adapter.addFragment(SignUpFragment(), "Sign Up")
+//
+//
+//        viewPager.adapter = adapter
+//        dotsIndicator.setViewPager2(viewPager)
+//
+//        LoginFragment.onClickLogin={
+//            findNavController().navigate(R.id.bottom_menu_nav_graph)
+//        }
+//    }
 
 }

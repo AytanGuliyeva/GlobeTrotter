@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "582429263411",
+    "project_id": "globetrotter-1f997",
+    "storage_bucket": "globetrotter-1f997.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:582429263411:android:5254582b58d80831f90546",
+        "android_client_info": {
+          "package_name": "com.example.globetrotter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTAYQVet_ryQdyiAPYVOlxUBTGXbgRNtc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
