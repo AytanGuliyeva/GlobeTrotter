@@ -8,17 +8,17 @@
         android:icon="@drawable/icon_activities"
         android:title="Activities" />
     <item
-        android:id="@+id/flightSearchFragment"
+        android:id="@+id/searchFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:icon="@drawable/icon_flight"
-        android:title="Flight" />
+        android:title="Search" />
     <item
-        android:id="@+id/hotelSearchFragment"
+        android:id="@+id/favouritesFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:icon="@drawable/icon_hotel"
-        android:title="Hotels" />
+        android:icon="@drawable/icon_favourites"
+        android:title="Favourites" />
     <item
         android:id="@+id/userProfileFragment"
         android:layout_width="wrap_content"

@@ -32,8 +32,8 @@ class MainActivity : AppCompatActivity() {
 
         NavigationUI.setupWithNavController(binding.bottomNav, navController)
         navHostFragment.navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.flightSearchFragment
-                || destination.id == R.id.hotelSearchFragment
+            if (destination.id == R.id.favouritesFragment
+                || destination.id == R.id.searchFragment
                 || destination.id == R.id.userProfileFragment
                 || destination.id == R.id.discoverActivitiesFragment
             ) {
@@ -44,13 +44,13 @@ class MainActivity : AppCompatActivity() {
         }
         binding.bottomNav.setOnItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.flightSearchFragment -> {
-                    navController.popBackStack(R.id.flightSearchFragment, false)
+                R.id.discoverActivitiesFragment -> {
+                    navController.popBackStack(R.id.discoverActivitiesFragment, false)
                     true
                 }
-                R.id.hotelSearchFragment -> {
-                    navController.popBackStack(R.id.hotelSearchFragment, false)
-                    navController.navigate(R.id.hotelSearchFragment)
+                R.id.searchFragment -> {
+                    navController.popBackStack(R.id.searchFragment, false)
+                    navController.navigate(R.id.searchFragment)
                     true
                 }
                 R.id.userProfileFragment -> {
@@ -59,9 +59,9 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
 
-                R.id.discoverActivitiesFragment -> {
-                    navController.popBackStack(R.id.discoverActivitiesFragment, false)
-                    navController.navigate(R.id.discoverActivitiesFragment)
+                R.id.favouritesFragment -> {
+                    navController.popBackStack(R.id.favouritesFragment, false)
+                    navController.navigate(R.id.favouritesFragment)
                     true
                 }
                 else -> false

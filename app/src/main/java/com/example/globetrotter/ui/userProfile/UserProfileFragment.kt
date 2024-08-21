@@ -47,6 +47,7 @@ class UserProfileFragment : Fragment() {
         viewModel.userInformation.observe(viewLifecycleOwner) { userResource ->
             when (userResource) {
                 is Resource.Success -> {
+                    binding.textName.text="Hi, ${userResource.data.username}!"
                     Glide.with(binding.root)
                         .load(userResource.data.imageUrl)
                         .into(binding.imgProfile)

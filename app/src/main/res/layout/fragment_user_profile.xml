@@ -13,10 +13,11 @@
         android:layout_height="80dp"
         android:layout_margin="10dp"
         android:src="@drawable/profile_photo_default"
-        app:layout_constraintBottom_toTopOf="@id/cardView"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:civ_border_color="@color/white"
         app:civ_border_width="2dp"
+        app:layout_constraintVertical_bias="0.2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -29,6 +30,26 @@
         android:padding="5dp"
         app:layout_constraintBottom_toBottomOf="@id/imgProfile"
         app:layout_constraintEnd_toEndOf="@id/imgProfile" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imgProfile"
+        android:layout_marginTop="20dp"
+        tools:text="Name"
+        android:textColor="@color/white"
+        android:textSize="20sp"/>
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/animation"
+        app:layout_constraintStart_toEndOf="@id/textName"
+        app:layout_constraintTop_toTopOf="@id/textName"
+        android:src="@drawable/travellingg"
+        app:layout_constraintBottom_toBottomOf="@id/textName"
+        />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
@@ -37,11 +58,12 @@
         android:layout_marginHorizontal="30dp"
         android:background="@color/white"
         app:cardCornerRadius="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:elevation="2dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5">
+        app:layout_constraintTop_toBottomOf="@id/textName"
+       >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -60,6 +82,16 @@
                 app:drawableStartCompat="@drawable/icon_edit"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/grey2"
+                android:id="@+id/view"
+                android:layout_margin="3dp"
+                app:layout_constraintTop_toBottomOf="@id/editProfile"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/changePassword"/>
 
             <TextView
                 android:id="@+id/changePassword"
@@ -73,6 +105,16 @@
                 app:drawableStartCompat="@drawable/icon_password"
                 app:layout_constraintStart_toStartOf="@id/editProfile"
                 app:layout_constraintTop_toBottomOf="@id/editProfile" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/grey2"
+                android:id="@+id/view2"
+                android:layout_margin="3dp"
+                app:layout_constraintTop_toBottomOf="@id/changePassword"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/language"/>
 
             <TextView
                 android:id="@+id/language"
@@ -87,18 +129,18 @@
                 app:layout_constraintStart_toStartOf="@id/editProfile"
                 app:layout_constraintTop_toBottomOf="@id/changePassword" />
 
-            <TextView
-                android:id="@+id/favActivities"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Favourites"
-                android:drawablePadding="5dp"
-                app:drawableStartCompat="@drawable/icon_favourites"
-                android:textColor="@color/blue"
-                android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="@id/editProfile"
-                app:layout_constraintTop_toBottomOf="@id/language" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/grey2"
+                android:id="@+id/view3"
+                android:layout_margin="3dp"
+                app:layout_constraintTop_toBottomOf="@id/language"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/logOut"/>
+
 
             <TextView
                 android:id="@+id/logOut"
@@ -113,7 +155,7 @@
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@id/editProfile"
-                app:layout_constraintTop_toBottomOf="@id/favActivities" />
+                app:layout_constraintTop_toBottomOf="@id/language" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 

@@ -34,7 +34,7 @@ class GetStartedFragment : Fragment() {
 
             if (isAdded) {
                 Handler(Looper.getMainLooper()).postDelayed({
-                    findNavController().navigate(R.id.action_getStartedFragment_to_loginFragment)
+                    findNavController().navigate(R.id.action_getStartedFragment_to_loginFragment2)
                 }, 1000)
             }
 

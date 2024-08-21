@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.addPlaces.AddPlacesFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@color/white"
+            android:padding="5dp"
+            android:src="@drawable/icon_back"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imgAddPost"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="20dp"
+            android:contentDescription="image"
+            android:src="@drawable/add_post"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnBack" />
+
+        <EditText
+            android:id="@+id/edtPlace"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_marginVertical="20dp"
+            android:background="@drawable/background"
+            android:hint="Place..."
+            android:padding="13dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imgAddPost" />
+
+        <EditText
+            android:id="@+id/edtDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_marginVertical="20dp"
+            android:background="@drawable/background"
+            android:drawablePadding="5dp"
+            android:hint="Description..."
+            android:padding="13dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edtPlace" />
+
+
+        <EditText
+            android:id="@+id/edtCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_marginVertical="20dp"
+            android:background="@drawable/background"
+            android:drawablePadding="5dp"
+            android:hint="Category..."
+            android:padding="13dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edtDescription" />
+
+
+        <EditText
+            android:id="@+id/edtLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_marginVertical="20dp"
+            android:background="@drawable/background"
+            android:drawablePadding="5dp"
+            android:hint="Location..."
+            android:padding="13dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edtCategory" />
+
+        <EditText
+            android:id="@+id/edtTicketPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_marginVertical="20dp"
+            android:background="@drawable/background"
+            android:drawablePadding="5dp"
+            android:hint="Ticket Price..."
+            android:padding="13dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edtLocation" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_margin="20dp"
+            android:src="@drawable/travel_illustration"
+            app:layout_constraintBottom_toTopOf="@id/btnShare"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edtTicketPrice" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnShare"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:background="@drawable/background"
+            android:backgroundTint="@color/blue"
+            android:text="Share"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

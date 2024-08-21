@@ -59,8 +59,7 @@ class LoginFragment : Fragment() {
                         username, password
                     ).addOnSuccessListener {
                         binding.progressBar.visibility = View.GONE
-                        findNavController().navigate(R.id.discoverActivitiesFragment)
-                      //  findNavController().navigate(R.id.action_loginFragment_to_discoverActivitiesFragment)
+                        findNavController().navigate(R.id.action_loginFragment_to_discoverActivitiesFragment3)
 
                     }.addOnFailureListener {
                         binding.progressBar.visibility = View.GONE
@@ -77,15 +76,13 @@ class LoginFragment : Fragment() {
 
         private fun checkLogin() {
             if (auth.currentUser != null) {
-                findNavController().navigate(R.id.discoverActivitiesFragment)
-               // findNavController().navigate(R.id.action_loginFragment_to_discoverActivitiesFragment)
+               findNavController().navigate(R.id.action_loginFragment_to_discoverActivitiesFragment3)
             }
         }
 
         private fun initNavigationListeners() {
             binding.btnCreateNewAccount.setOnClickListener {
-                findNavController().navigate(R.id.signUpFragment)
-                //findNavController().navigate(R.id.action_loginFragment_to_signUpFragment)
+                findNavController().navigate(R.id.action_loginFragment_to_signUpFragment2)
             }
         }
     }
