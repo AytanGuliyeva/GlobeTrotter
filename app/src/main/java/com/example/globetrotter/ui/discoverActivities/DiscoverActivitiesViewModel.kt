@@ -69,9 +69,8 @@ class DiscoverActivitiesViewModel() : ViewModel() {
         firestore.collection("Places")
             .get()
             .addOnSuccessListener { documents ->
-                uniqueCategories.clear() // Önceki kategoriler temizlenir
-                chipGroup.removeAllViews() // ChipGroup'daki mevcut chip'ler temizlenir
-
+                uniqueCategories.clear()
+                chipGroup.removeAllViews()
                 for (document in documents) {
                     val category = document.getString("category")
                     if (category != null) {
