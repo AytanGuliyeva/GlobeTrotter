@@ -1,0 +1,12 @@
+<resources>
+    <!-- Rounded Corner stilini ShapeableImageView için tanımlıyoruz -->
+    <style name="RoundedCorner" parent="Widget.MaterialComponents.ShapeableImageView">
+        <item name="shapeAppearance">@style/RoundedImageView</item>
+    </style>
+
+    <!-- ShapeAppearance stilini tanımlıyoruz -->
+    <style name="RoundedImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">20dp</item> <!-- CardView ile aynı köşe yarıçapı -->
+    </style>
+</resources>

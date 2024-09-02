@@ -18,6 +18,7 @@ import com.example.globetrotter.data.Places
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,8 +41,11 @@ class SearchViewModel : ViewModel() {
     val loading: LiveData<Boolean>
         get() = _loading
 
-    fun fetchCategoriesAndAddChips(chipGroup: ChipGroup) {
+    private val placesList = mutableListOf<Places>()
+    private var lastVisibleDocument: DocumentSnapshot? = null
+    private val pageSize = 10
 
+    fun fetchCategoriesAndAddChips(chipGroup: ChipGroup) {
         _categories.postValue(Resource.Loading)
         firestore.collection("Places")
             .get()
@@ -67,15 +71,6 @@ class SearchViewModel : ViewModel() {
 
     private fun addChipToGroup(chipGroup: ChipGroup, category: String) {
         val context = chipGroup.context
-        val chipContainer = LinearLayout(context)
-        chipContainer.orientation = LinearLayout.VERTICAL
-        val containerParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
-        containerParams.setMargins(10, 8, 8, 8)
-        chipContainer.layoutParams = containerParams
-
         val chip = Chip(context)
         chip.isCheckable = true
 
@@ -97,7 +92,12 @@ class SearchViewModel : ViewModel() {
             chip.chipIconSize = 48f
         }
 
-        chip.text = ""
+        chip.text = category
+
+        chip.chipStartPadding = 16f
+        chip.iconStartPadding = 8f
+        chip.iconEndPadding = 8f
+        chip.chipEndPadding = 16f
 
         val chipParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -120,33 +120,51 @@ class SearchViewModel : ViewModel() {
         val colorStateList = ColorStateList(states, colors)
         chip.chipBackgroundColor = colorStateList
 
-        chipContainer.addView(chip)
-
-        val textView = TextView(context)
-        textView.text = category
-        textView.setTextColor(Color.BLACK)
-        textView.textSize = 12f
-        textView.gravity = Gravity.CENTER_HORIZONTAL
-
-        textView.maxWidth = 120
-        textView.ellipsize = TextUtils.TruncateAt.END
-        textView.isSingleLine = true
-
-        val textParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
-        textView.layoutParams = textParams
-
-        chipContainer.addView(textView)
-
-        chipGroup.addView(chipContainer)
+        chipGroup.addView(chip)
     }
-
 
     fun fetchPlaces() {
         _loading.postValue(true)
         firestore.collection("Places").get()
+            .addOnSuccessListener { documents ->
+                val placesList = mutableListOf<Places>()
+                for (placeDocs in documents) {
+                    val category = placeDocs.getString("category") ?: ""
+                    val description = placeDocs.getString("description") ?: ""
+                    val location = placeDocs.getString("location") ?: ""
+                    val place = placeDocs.getString("place") ?: ""
+                    val placeImageUrls = placeDocs.get("placeImageUrls") as? List<String> ?: emptyList()
+                    val placesId = placeDocs.getString("placesId") ?: ""
+                    val price = placeDocs.getString("price") ?: ""
+
+                    val places = Places(
+                        category = category,
+                        description = description,
+                        location = location,
+                        place = place,
+                        placeImageUrls = placeImageUrls,
+                        placesId = placesId,
+                        price = price
+                    )
+
+                    placesList.add(places)
+                }
+                _placesResult.postValue(Resource.Success(placesList))
+                _loading.postValue(false)
+            }
+            .addOnFailureListener { exception ->
+                _placesResult.postValue(Resource.Error(exception))
+                _loading.postValue(false)
+            }
+    }
+
+    fun searchPlaces(query:String) {
+        _loading.postValue(true)
+        firestore.collection("Places")
+            .orderBy("location")
+            .startAt(query)
+            .endAt(query + "\uf8ff")
+            .get()
             .addOnSuccessListener { documents ->
                 val placesList = mutableListOf<Places>()
                 for (placeDocs in documents) {
