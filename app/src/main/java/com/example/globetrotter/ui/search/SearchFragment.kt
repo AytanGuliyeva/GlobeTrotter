@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.example.globetrotter.base.Resource
@@ -27,6 +28,7 @@ class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModels()
     private lateinit var auth: FirebaseAuth
     private lateinit var placesAdapter: PlacesAdapter
+    private var selectedPlaces: Places? = null
     private lateinit var firestore: FirebaseFirestore
     private lateinit var tabLayout: TabLayout
     private lateinit var viewPager: ViewPager2
@@ -48,6 +50,7 @@ class SearchFragment : Fragment() {
         setupRecyclerView()
         observePlaceResult()
         observeCategories()
+
 
         viewModel.fetchPlaces()
         viewModel.fetchCategoriesAndAddChips(binding.chipGroup)
@@ -97,10 +100,18 @@ class SearchFragment : Fragment() {
 
 
     private fun setupRecyclerView() {
-        placesAdapter = PlacesAdapter()
+        placesAdapter = PlacesAdapter(itemClick = { place ->
+            placesDetail(place.placesId)
+        })
         binding.rvPost.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         binding.rvPost.adapter = placesAdapter
     }
+
+    fun placesDetail(placesId: String) {
+        val action = SearchFragmentDirections.actionSearchFragmentToPlacesDetailFragment(placesId)
+        findNavController().navigate(action)
+    }
+
 
     private fun observeCategories() {
         viewModel.categories.observe(viewLifecycleOwner) { categoriesResource ->

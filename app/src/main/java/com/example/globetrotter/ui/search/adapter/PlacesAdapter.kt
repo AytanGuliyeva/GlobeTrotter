@@ -1,14 +1,18 @@
 package com.example.globetrotter.ui.search.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.example.globetrotter.R
 import com.example.globetrotter.data.Places
 import com.example.globetrotter.databinding.SearchPostItemBinding
+import com.google.android.material.tabs.TabLayoutMediator
 
-class PlacesAdapter : RecyclerView.Adapter<PlacesAdapter.PlacesViewHolder>() {
+class PlacesAdapter(private var itemClick: (item: Places) -> Unit) :
+    RecyclerView.Adapter<PlacesAdapter.PlacesViewHolder>() {
 
     private val diffUtilCallBack = object : DiffUtil.ItemCallback<Places>() {
         override fun areItemsTheSame(oldItem: Places, newItem: Places): Boolean {
@@ -44,8 +48,17 @@ class PlacesAdapter : RecyclerView.Adapter<PlacesAdapter.PlacesViewHolder>() {
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Places) {
-            val imageAdapter = PlacesImageAdapter(item.placeImageUrls)
-            binding.viewPager.adapter = imageAdapter
+            val imageAdapter = PlacesImageAdapter(item.placeImageUrls) {
+                itemClick(item)
+            }
+             binding.viewPager.adapter = imageAdapter
+//            TabLayoutMediator(binding.dotsIndicator, binding.viewPager) { tab, position ->
+//                tab.view.setBackgroundResource(R.drawable.tab_background)  // Dotted background drawable
+//            }.attach()
+
+            val dotsIndicator = binding.dotsIndicator
+            dotsIndicator.setViewPager2(binding.viewPager)
+
             val shortenedText = if (item.place.length > 8) {
                 item.place.substring(0, 8) + "..."
             } else {
@@ -56,6 +69,11 @@ class PlacesAdapter : RecyclerView.Adapter<PlacesAdapter.PlacesViewHolder>() {
             val layoutParams = binding.root.layoutParams
             layoutParams.height = if (adapterPosition % 2 == 0) 400 else 200
             binding.root.layoutParams = layoutParams
+
+            itemView.setOnClickListener {
+                Log.d("PlacesAdapter", "Item clicked: ${item.placesId}")
+                itemClick(item)
+            }
         }
     }
 }

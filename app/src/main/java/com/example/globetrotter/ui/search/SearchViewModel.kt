@@ -74,7 +74,7 @@ class SearchViewModel : ViewModel() {
         val chip = Chip(context)
         chip.isCheckable = true
 
-        val iconResId = when (category) {
+        val iconResId = when (category.trim()) {
             "Historical" -> R.drawable.icon_historical
             "Natural Wonders" -> R.drawable.icon_natural_wonders
             "Mountains" -> R.drawable.icon_mountain

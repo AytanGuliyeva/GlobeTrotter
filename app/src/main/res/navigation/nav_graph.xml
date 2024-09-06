@@ -88,7 +88,7 @@
    </fragment>
    <fragment
        android:id="@+id/placesDetailFragment"
-       android:name="com.example.globetrotter.PlacesDetailFragment"
+       android:name="com.example.globetrotter.ui.placesDetail.PlacesDetailFragment"
        android:label="fragment_places_detail"
        tools:layout="@layout/fragment_places_detail" >
       <action
@@ -96,6 +96,9 @@
           app:destination="@id/searchFragment"
           app:popUpTo="@id/placesDetailFragment"
           app:popUpToInclusive="true" />
+      <argument
+          android:name="placesId"
+          app:argType="string" />
    </fragment>
 </navigation>
 
