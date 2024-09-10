@@ -30,7 +30,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         app:dotsColor="@color/grey"
-        app:selectedDotColor="@color/blue"
+        app:dotsSize="10dp"
+        app:selectedDotColor="@color/blue2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/viewPager"/>
@@ -282,8 +283,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="5dp"
                 android:text="more."
-                android:textColor="@color/red"
                 android:visibility="gone"
+                android:textColor="@color/red"
                 app:layout_constraintBottom_toBottomOf="@id/textDescription"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/textDescription" />
@@ -311,7 +312,6 @@
               android:layout_height="wrap_content"
               android:id="@+id/textPrice"
               android:text="$"
-              android:textSize="19sp"
               android:layout_margin="10dp"
               app:layout_constraintEnd_toStartOf="@id/buttonVisited"
               app:layout_constraintStart_toStartOf="parent"

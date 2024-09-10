@@ -67,12 +67,37 @@ class PlacesDetailFragment : Fragment() {
 
         }
         binding.viewPager.adapter = adapter
+        val dotsIndicator = binding.dotsIndicator
+        dotsIndicator.setViewPager2(binding.viewPager)
 
         binding.textPlace.text=places.place
         binding.textCategory2.text=places.category
         binding.textLocation2.text=places.location
         binding.textDescription2.text=places.description
+//        val fullText = places.description
+//        val shortText = if (fullText.length > 100) {
+//            fullText.substring(0, 100) + "..."
+//        } else {
+//            fullText
+//        }
+//
+//        binding.textDescription2.text = shortText
+//
+//        // "more" yazısını ekle
+//        if (fullText.length > 100) {
+//            binding.textDescription2.append(" more")
+//            binding.textDescription2.setTextColor(Color.BLACK)
+//
+//            // More tıklanınca tüm metni göster
+//            binding.textDescription2.setOnClickListener {
+//                binding.textDescription2.text = fullText
+//            }
+//        }
+
         binding.textPrice.text="$ ${places.price}"
+        if (places.price == "Price changes according to place and transport.") {
+            binding.textPrice.setTextColor(resources.getColor(R.color.red, null))
+        }
     }
     private fun initListener() {
         binding.buttonBack.setOnClickListener {

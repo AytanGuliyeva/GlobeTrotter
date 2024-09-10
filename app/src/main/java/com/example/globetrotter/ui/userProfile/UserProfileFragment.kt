@@ -17,6 +17,8 @@ import com.bumptech.glide.Glide
 import com.example.globetrotter.R
 import com.example.globetrotter.base.Resource
 import com.example.globetrotter.databinding.FragmentUserProfileBinding
+import com.example.globetrotter.ui.search.SearchFragmentDirections
+import com.example.globetrotter.ui.search.adapter.PlacesImageAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -38,11 +40,13 @@ class UserProfileFragment : Fragment() {
         return binding.root
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         auth = Firebase.auth
         firestore= Firebase.firestore
         buttonLogout()
+        initNavigationListeners()
         viewModel.fetchUserInformation()
         viewModel.userInformation.observe(viewLifecycleOwner) { userResource ->
             when (userResource) {
@@ -62,6 +66,7 @@ class UserProfileFragment : Fragment() {
                 }
             }
         }
+
 
     }
     private fun buttonLogout() {
@@ -90,4 +95,14 @@ class UserProfileFragment : Fragment() {
     }
 
 
+    private fun initNavigationListeners(){
+        binding.buttonEdit.setOnClickListener {
+            val action = UserProfileFragmentDirections.actionUserProfileFragmentToEditProfileFragment()
+            findNavController().navigate(action)
+        }
+        binding.editProfile.setOnClickListener {
+            val action = UserProfileFragmentDirections.actionUserProfileFragmentToEditProfileFragment()
+            findNavController().navigate(action)
+        }
+    }
 }

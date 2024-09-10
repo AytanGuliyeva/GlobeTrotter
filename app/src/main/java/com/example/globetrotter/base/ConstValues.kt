@@ -6,6 +6,7 @@ object ConstValues {
     const val EMAIL = "email"
     const val PASSWORD = "password"
     const val IMAGE_URL = "imageUrl"
+    const val IMAGES = "images"
     const val USERS = "Users"
 
 }

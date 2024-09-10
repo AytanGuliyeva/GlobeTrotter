@@ -60,6 +60,9 @@
           app:destination="@id/loginFragment"
           app:popUpTo="@id/nav_graph"
           app:popUpToInclusive="true" />
+      <action
+          android:id="@+id/action_userProfileFragment_to_editProfileFragment"
+          app:destination="@id/editProfileFragment" />
    </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -100,6 +103,17 @@
           android:name="placesId"
           app:argType="string" />
    </fragment>
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.example.globetrotter.editProfile.EditProfileFragment"
+        android:label="fragment_edit_profile"
+        tools:layout="@layout/fragment_edit_profile" >
+       <action
+           android:id="@+id/action_editProfileFragment_to_userProfileFragment"
+           app:destination="@id/userProfileFragment"
+           app:popUpTo="@id/editProfileFragment"
+           app:popUpToInclusive="true" />
+    </fragment>
 </navigation>
 
 

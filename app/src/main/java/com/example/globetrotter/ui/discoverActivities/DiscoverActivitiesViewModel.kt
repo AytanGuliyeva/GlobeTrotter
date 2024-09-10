@@ -1,8 +1,10 @@
 package com.example.globetrotter.ui.discoverActivities
 
+import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.util.Log
+import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -64,51 +66,132 @@ class DiscoverActivitiesViewModel() : ViewModel() {
     }
 
 
-    fun fetchCategoriesAndAddChips(chipGroup: ChipGroup) {
-        _categories.postValue(Resource.Loading)
-        firestore.collection("Places")
-            .get()
-            .addOnSuccessListener { documents ->
-                uniqueCategories.clear()
-                chipGroup.removeAllViews()
-                for (document in documents) {
-                    val category = document.getString("category")
-                    if (category != null) {
-                        if (uniqueCategories.add(category.trim())) {
-                            addChipToGroup(chipGroup, category.trim())
-                            Log.d("TAG", "Added new category: $category")
-                        }
+//    fun fetchCategoriesAndAddChips(chipGroup: ChipGroup) {
+//        _categories.postValue(Resource.Loading)
+//        firestore.collection("Places")
+//            .get()
+//            .addOnSuccessListener { documents ->
+//                uniqueCategories.clear()
+//                chipGroup.removeAllViews()
+//                for (document in documents) {
+//                    val category = document.getString("category")
+//                    if (category != null) {
+//                        if (uniqueCategories.add(category.trim())) {
+//                            addChipToGroup(chipGroup, category.trim())
+//                            Log.d("TAG", "Added new category: $category")
+//                        }
+//                    }
+//                }
+//                _categories.postValue(Resource.Success(uniqueCategories.toList()))
+//                Log.d("TAG", "Categories fetched successfully: ${uniqueCategories.toList()}")
+//            }
+//            .addOnFailureListener { exception ->
+//                _categories.postValue(Resource.Error(exception))
+//            }
+//    }
+//
+//
+//    private fun addChipToGroup(chipGroup: ChipGroup, category: String) {
+//        val chip = Chip(chipGroup.context)
+//        chip.text = category
+//        chip.isCheckable = true
+//        val chipBorderColor = ContextCompat.getColor(chipGroup.context, R.color.blue)
+//        val chipBackgroundColor = ContextCompat.getColor(chipGroup.context, R.color.blue)
+//        chip.chipStrokeColor = ColorStateList.valueOf(chipBorderColor)
+//
+//        val states = arrayOf(
+//            intArrayOf(android.R.attr.state_checked),
+//            intArrayOf()
+//        )
+//        val colors = intArrayOf(
+//            chipBackgroundColor,
+//            Color.TRANSPARENT
+//        )
+//        val colorStateList = ColorStateList(states, colors)
+//
+//        chip.chipBackgroundColor = colorStateList
+//        chipGroup.addView(chip)
+//    }
+fun fetchCategoriesAndAddChips(chipGroup: ChipGroup) {
+    _categories.postValue(Resource.Loading)
+    firestore.collection("Places")
+        .get()
+        .addOnSuccessListener { documents ->
+            uniqueCategories.clear()
+            chipGroup.removeAllViews()
+            for (document in documents) {
+                document.getString("category")?.trim()?.let { category ->
+                    if (uniqueCategories.add(category)) {
+                        addChipToGroup(chipGroup, category)
                     }
                 }
-                _categories.postValue(Resource.Success(uniqueCategories.toList()))
-                Log.d("TAG", "Categories fetched successfully: ${uniqueCategories.toList()}")
             }
-            .addOnFailureListener { exception ->
-                _categories.postValue(Resource.Error(exception))
-            }
-    }
-
+            _categories.postValue(Resource.Success(uniqueCategories.toList()))
+        }
+        .addOnFailureListener { exception ->
+            _categories.postValue(Resource.Error(exception))
+        }
+}
 
     private fun addChipToGroup(chipGroup: ChipGroup, category: String) {
-        val chip = Chip(chipGroup.context)
-        chip.text = category
-        chip.isCheckable = true
-        val chipBorderColor = ContextCompat.getColor(chipGroup.context, R.color.blue)
-        val chipBackgroundColor = ContextCompat.getColor(chipGroup.context, R.color.blue)
-        chip.chipStrokeColor = ColorStateList.valueOf(chipBorderColor)
+        val context = chipGroup.context
+        val chip = Chip(context).apply {
+            isCheckable = true
+            text = category
+            setChipIconByCategory(context, this, category)
+            setupChipStyle(context, this)
+        }
+//        chip.setOnCheckedChangeListener { _, isChecked ->
+//            if (isChecked) {
+//                selectedCategory = category
+//                selectedCategories.add(category)
+//                fetchPlacesByCategories()
+//            } else {
+//                selectedCategories.remove(category)
+//            }
+//        }
+        chipGroup.addView(chip)
+    }
 
+    private fun setChipIconByCategory(context: Context, chip: Chip, category: String) {
+        val iconResId = when (category) {
+            "Historical" -> R.drawable.icon_historical
+            "Natural Wonders" -> R.drawable.icon_natural_wonders
+            "Mountains" -> R.drawable.icon_mountain
+            "Beaches" -> R.drawable.icon_beach
+            "Camping & Hiking" -> R.drawable.icon_camping
+            "Urban Exploration" -> R.drawable.icon_urban
+            "Islands" -> R.drawable.icon_island
+            "Cultural Experiences" -> R.drawable.icon_cultural
+            else -> 0
+        }
+        if (iconResId != 0) {
+            chip.chipIcon = ContextCompat.getDrawable(context, iconResId)
+            chip.chipIconTint = ColorStateList.valueOf(Color.BLUE)
+            chip.chipIconSize = 48f
+        }
+    }
+
+    private fun setupChipStyle(context: Context, chip: Chip) {
+        val chipParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        chip.layoutParams = chipParams
+        chip.chipStartPadding = 16f
+        chip.iconStartPadding = 8f
+        chip.iconEndPadding = 8f
+        chip.chipEndPadding = 16f
+        chip.chipStrokeColor = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.blue))
         val states = arrayOf(
             intArrayOf(android.R.attr.state_checked),
             intArrayOf()
         )
         val colors = intArrayOf(
-            chipBackgroundColor,
+            ContextCompat.getColor(context, R.color.blue),
             Color.TRANSPARENT
         )
-        val colorStateList = ColorStateList(states, colors)
-
-        chip.chipBackgroundColor = colorStateList
-        chipGroup.addView(chip)
+        chip.chipBackgroundColor = ColorStateList(states, colors)
     }
 
     private fun DocumentSnapshot.toUser(): Users? {

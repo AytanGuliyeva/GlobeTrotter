@@ -11,12 +11,11 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import androidx.viewpager2.widget.ViewPager2
 import com.example.globetrotter.base.Resource
 import com.example.globetrotter.data.Places
 import com.example.globetrotter.databinding.FragmentSearchBinding
 import com.example.globetrotter.ui.search.adapter.PlacesAdapter
-import com.google.android.material.tabs.TabLayout
+import com.google.android.material.chip.Chip
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -28,11 +27,8 @@ class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModels()
     private lateinit var auth: FirebaseAuth
     private lateinit var placesAdapter: PlacesAdapter
-    private var selectedPlaces: Places? = null
     private lateinit var firestore: FirebaseFirestore
-    private lateinit var tabLayout: TabLayout
-    private lateinit var viewPager: ViewPager2
-
+    private val selectedCategories = mutableListOf<String>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,32 +47,80 @@ class SearchFragment : Fragment() {
         observePlaceResult()
         observeCategories()
 
-
         viewModel.fetchPlaces()
         viewModel.fetchCategoriesAndAddChips(binding.chipGroup)
+
+        setupChipGroupListener()
+        setupSearchViewListener()
+    }
+    private fun setupSwipeRefreshLayout(data: List<Places>) {
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            placesAdapter.submitList(data)
+            binding.swipeRefreshLayout.isRefreshing = false
+        }
+    }
+
+    private fun setupRecyclerView() {
+        placesAdapter = PlacesAdapter { place ->
+            placesDetail(place.placesId)
+        }
+        binding.rvPost.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        binding.rvPost.adapter = placesAdapter
+    }
+
+    private fun setupChipGroupListener() {
+        binding.chipGroup.setOnCheckedChangeListener { group, checkedId ->
+            val chip = group.findViewById<Chip>(checkedId)
+            val category = chip?.text.toString()
+
+            if (chip?.isChecked == true) {
+                if (!selectedCategories.contains(category)) {
+                    selectedCategories.add(category)
+                }
+            } else {
+                selectedCategories.remove(category)
+            }
+
+            Log.d("SearchFragment2", "Selected categories: $selectedCategories")
+
+            viewModel.fetchPlacesByCategories()
+        }
+    }
+
+
+    private fun setupSearchViewListener() {
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
             }
+
             override fun onQueryTextChange(newText: String?): Boolean {
                 filterPlacesByLocation(newText)
                 return true
             }
         })
     }
+
     private fun filterPlacesByLocation(query: String?) {
         query?.let {
             viewModel.searchPlaces(it)
         }
     }
 
-
-
     private fun observePlaceResult() {
         viewModel.placesResult.observe(viewLifecycleOwner) { resource ->
             when (resource) {
-                is Resource.Success<List<Places>> -> {
-                    placesAdapter.submitList(resource.data)
+                is Resource.Success -> {
+                    setupSwipeRefreshLayout(resource.data)
+                    val filteredPlaces = if (selectedCategories.isEmpty()) {
+                        resource.data
+                    } else {
+                        resource.data.filter { place ->
+                            selectedCategories.contains(place.category)
+                        }
+                    }
+                    placesAdapter.submitList(filteredPlaces)
+
                     showLoading(false)
                 }
 
@@ -98,20 +142,10 @@ class SearchFragment : Fragment() {
         }
     }
 
-
-    private fun setupRecyclerView() {
-        placesAdapter = PlacesAdapter(itemClick = { place ->
-            placesDetail(place.placesId)
-        })
-        binding.rvPost.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-        binding.rvPost.adapter = placesAdapter
-    }
-
-    fun placesDetail(placesId: String) {
+    private fun placesDetail(placesId: String) {
         val action = SearchFragmentDirections.actionSearchFragmentToPlacesDetailFragment(placesId)
         findNavController().navigate(action)
     }
-
 
     private fun observeCategories() {
         viewModel.categories.observe(viewLifecycleOwner) { categoriesResource ->
@@ -134,6 +168,8 @@ class SearchFragment : Fragment() {
             }
         }
     }
+
+
 
     private fun showLoading(isLoading: Boolean) {
         binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE

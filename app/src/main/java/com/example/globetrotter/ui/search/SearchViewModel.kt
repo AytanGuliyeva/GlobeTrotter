@@ -1,20 +1,18 @@
 package com.example.globetrotter.ui.search
 
+import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.text.TextUtils
 import android.util.Log
-import android.view.Gravity
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.globetrotter.R
 import com.example.globetrotter.base.Resource
 import com.example.globetrotter.data.Places
+import com.example.globetrotter.ui.search.adapter.PlacesAdapter
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.firebase.auth.FirebaseAuth
@@ -24,45 +22,41 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class SearchViewModel : ViewModel() {
-    private var firestore = FirebaseFirestore.getInstance()
-    private var auth: FirebaseAuth = FirebaseAuth.getInstance()
+
+    private val firestore = FirebaseFirestore.getInstance()
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+
+    private var placesList: List<Places> = emptyList()
+    private var isPlacesFetched = false
+    private var selectedCategory: String? = null
+    private val selectedCategories = mutableListOf<String>()
 
     private val uniqueCategories = mutableSetOf<String>()
 
     private val _categories = MutableLiveData<Resource<List<String>>>()
-    val categories: LiveData<Resource<List<String>>>
-        get() = _categories
+    val categories: LiveData<Resource<List<String>>> get() = _categories
 
     private val _placesResult = MutableLiveData<Resource<List<Places>>>()
-    val placesResult:LiveData<Resource<List<Places>>>
-        get() = _placesResult
+    val placesResult: LiveData<Resource<List<Places>>> get() = _placesResult
 
     private val _loading = MutableLiveData<Boolean>()
-    val loading: LiveData<Boolean>
-        get() = _loading
-
-    private val placesList = mutableListOf<Places>()
-    private var lastVisibleDocument: DocumentSnapshot? = null
-    private val pageSize = 10
+    val loading: LiveData<Boolean> get() = _loading
 
     fun fetchCategoriesAndAddChips(chipGroup: ChipGroup) {
         _categories.postValue(Resource.Loading)
         firestore.collection("Places")
             .get()
-            .addOnSuccessListener { documents->
+            .addOnSuccessListener { documents ->
                 uniqueCategories.clear()
                 chipGroup.removeAllViews()
-                for (document in documents){
-                    val category = document.getString("category")
-                    if (category != null){
-                        if (uniqueCategories.add(category.trim())){
-                            addChipToGroup(chipGroup,category.trim())
-                            Log.d("TAG", "Added new category: $category")
+                for (document in documents) {
+                    document.getString("category")?.trim()?.let { category ->
+                        if (uniqueCategories.add(category)) {
+                            addChipToGroup(chipGroup, category)
                         }
                     }
                 }
                 _categories.postValue(Resource.Success(uniqueCategories.toList()))
-                Log.d("TAG", "Categories fetched successfully: ${uniqueCategories.toList()}")
             }
             .addOnFailureListener { exception ->
                 _categories.postValue(Resource.Error(exception))
@@ -71,10 +65,26 @@ class SearchViewModel : ViewModel() {
 
     private fun addChipToGroup(chipGroup: ChipGroup, category: String) {
         val context = chipGroup.context
-        val chip = Chip(context)
-        chip.isCheckable = true
+        val chip = Chip(context).apply {
+            isCheckable = true
+            text = category
+            setChipIconByCategory(context, this, category)
+            setupChipStyle(context, this)
+        }
+        chip.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                selectedCategory = category
+                selectedCategories.add(category)
+                fetchPlacesByCategories()
+            } else {
+                selectedCategories.remove(category)
+            }
+        }
+        chipGroup.addView(chip)
+    }
 
-        val iconResId = when (category.trim()) {
+    private fun setChipIconByCategory(context: Context, chip: Chip, category: String) {
+        val iconResId = when (category) {
             "Historical" -> R.drawable.icon_historical
             "Natural Wonders" -> R.drawable.icon_natural_wonders
             "Mountains" -> R.drawable.icon_mountain
@@ -85,71 +95,62 @@ class SearchViewModel : ViewModel() {
             "Cultural Experiences" -> R.drawable.icon_cultural
             else -> 0
         }
-
         if (iconResId != 0) {
             chip.chipIcon = ContextCompat.getDrawable(context, iconResId)
             chip.chipIconTint = ColorStateList.valueOf(Color.BLUE)
             chip.chipIconSize = 48f
         }
+    }
 
-        chip.text = category
-
-        chip.chipStartPadding = 16f
-        chip.iconStartPadding = 8f
-        chip.iconEndPadding = 8f
-        chip.chipEndPadding = 16f
-
+    private fun setupChipStyle(context: Context, chip: Chip) {
         val chipParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
         chip.layoutParams = chipParams
-
-        val chipBorderColor = ContextCompat.getColor(context, R.color.blue)
-        val chipBackgroundColor = ContextCompat.getColor(context, R.color.blue)
-        chip.chipStrokeColor = ColorStateList.valueOf(chipBorderColor)
-
+        chip.chipStartPadding = 16f
+        chip.iconStartPadding = 8f
+        chip.iconEndPadding = 8f
+        chip.chipEndPadding = 16f
+        chip.chipStrokeColor = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.blue))
         val states = arrayOf(
             intArrayOf(android.R.attr.state_checked),
             intArrayOf()
         )
         val colors = intArrayOf(
-            chipBackgroundColor,
+            ContextCompat.getColor(context, R.color.blue),
             Color.TRANSPARENT
         )
-        val colorStateList = ColorStateList(states, colors)
-        chip.chipBackgroundColor = colorStateList
-
-        chipGroup.addView(chip)
+        chip.chipBackgroundColor = ColorStateList(states, colors)
     }
 
     fun fetchPlaces() {
+        if (isPlacesFetched) return
         _loading.postValue(true)
+
         firestore.collection("Places").get()
             .addOnSuccessListener { documents ->
-                val placesList = mutableListOf<Places>()
-                for (placeDocs in documents) {
-                    val category = placeDocs.getString("category") ?: ""
-                    val description = placeDocs.getString("description") ?: ""
-                    val location = placeDocs.getString("location") ?: ""
-                    val place = placeDocs.getString("place") ?: ""
-                    val placeImageUrls = placeDocs.get("placeImageUrls") as? List<String> ?: emptyList()
-                    val placesId = placeDocs.getString("placesId") ?: ""
-                    val price = placeDocs.getString("price") ?: ""
-
-                    val places = Places(
-                        category = category,
-                        description = description,
-                        location = location,
-                        place = place,
-                        placeImageUrls = placeImageUrls,
-                        placesId = placesId,
-                        price = price
-                    )
-
-                    placesList.add(places)
+                placesList = documents.mapNotNull { document ->
+                    document.toObject(Places::class.java)
                 }
                 _placesResult.postValue(Resource.Success(placesList))
+                _loading.postValue(false)
+                isPlacesFetched = true
+            }
+            .addOnFailureListener { exception ->
+                _placesResult.postValue(Resource.Error(exception))
+                _loading.postValue(false)
+            }
+    }
+
+    fun fetchPlacesByCategories() {
+        _loading.postValue(true)
+        firestore.collection("Places")
+            .whereIn("category", selectedCategories)
+            .get()
+            .addOnSuccessListener { documents ->
+                val filteredPlaces = documents.mapNotNull { it.toObject(Places::class.java) }
+                _placesResult.postValue(Resource.Success(filteredPlaces))
                 _loading.postValue(false)
             }
             .addOnFailureListener { exception ->
@@ -158,7 +159,7 @@ class SearchViewModel : ViewModel() {
             }
     }
 
-    fun searchPlaces(query:String) {
+    fun searchPlaces(query: String) {
         _loading.postValue(true)
         firestore.collection("Places")
             .orderBy("location")
@@ -166,27 +167,8 @@ class SearchViewModel : ViewModel() {
             .endAt(query + "\uf8ff")
             .get()
             .addOnSuccessListener { documents ->
-                val placesList = mutableListOf<Places>()
-                for (placeDocs in documents) {
-                    val category = placeDocs.getString("category") ?: ""
-                    val description = placeDocs.getString("description") ?: ""
-                    val location = placeDocs.getString("location") ?: ""
-                    val place = placeDocs.getString("place") ?: ""
-                    val placeImageUrls = placeDocs.get("placeImageUrls") as? List<String> ?: emptyList()
-                    val placesId = placeDocs.getString("placesId") ?: ""
-                    val price = placeDocs.getString("price") ?: ""
-
-                    val places = Places(
-                        category = category,
-                        description = description,
-                        location = location,
-                        place = place,
-                        placeImageUrls = placeImageUrls,
-                        placesId = placesId,
-                        price = price
-                    )
-
-                    placesList.add(places)
+                val placesList = documents.mapNotNull { document ->
+                    document.toObject(Places::class.java)
                 }
                 _placesResult.postValue(Resource.Success(placesList))
                 _loading.postValue(false)
@@ -196,6 +178,4 @@ class SearchViewModel : ViewModel() {
                 _loading.postValue(false)
             }
     }
-
-
 }

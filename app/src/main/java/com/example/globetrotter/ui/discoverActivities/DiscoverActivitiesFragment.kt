@@ -50,27 +50,25 @@ class DiscoverActivitiesFragment : Fragment() {
         viewModel.fetchInformation()
         viewModel.fetchCategoriesAndAddChips(binding.chipGroup)
         Log.e("TAG", "onViewCreated: ${viewModel.fetchCategoriesAndAddChips(binding.chipGroup)}")
-        viewModel.userInformation.observe(viewLifecycleOwner) { userResource ->
-            when (userResource) {
-                is Resource.Success -> {
-                    Glide.with(binding.root)
-                        .load(userResource.data.imageUrl)
-                        .into(binding.imgProfile)
-                }
-
-                is Resource.Error -> {
-                    Toast.makeText(
-                        requireContext(),
-                        "${userResource.exception}",
-                        Toast.LENGTH_SHORT
-                    ).show()
-
-                }
-
-                is Resource.Loading -> {
-                }
-            }
-        }
+//        viewModel.userInformation.observe(viewLifecycleOwner) { userResource ->
+//            when (userResource) {
+//                is Resource.Success -> {
+//
+//                }
+//
+//                is Resource.Error -> {
+//                    Toast.makeText(
+//                        requireContext(),
+//                        "${userResource.exception}",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//
+//                }
+//
+//                is Resource.Loading -> {
+//                }
+//            }
+//        }
         viewModel.categories.observe(viewLifecycleOwner) { categoriesResource ->
             when (categoriesResource) {
                 is Resource.Success -> {

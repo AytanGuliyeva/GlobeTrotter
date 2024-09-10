@@ -79,7 +79,7 @@
         <HorizontalScrollView
             android:id="@+id/chipScrollView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_marginHorizontal="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
@@ -100,11 +100,11 @@
 
             </com.google.android.material.chip.ChipGroup>
         </HorizontalScrollView>
+
         <View
             android:id="@+id/view3"
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:layout_marginTop="10dp"
             android:background="@color/grey2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
