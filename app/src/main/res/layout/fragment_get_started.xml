@@ -26,11 +26,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:drawableStart="@drawable/ic_airplane"
         android:drawablePadding="5dp"
-        android:text="GlobeTrotter"
+        android:text="@string/globetrotter"
+        app:drawableStartCompat="@drawable/app_icon_3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toTopOf="@id/textWelcome" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

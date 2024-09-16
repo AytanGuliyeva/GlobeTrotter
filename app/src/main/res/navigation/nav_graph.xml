@@ -77,7 +77,11 @@
        android:id="@+id/favouritesFragment"
        android:name="com.example.globetrotter.ui.favourites.FavouritesFragment"
        android:label="fragment_favourites"
-       tools:layout="@layout/fragment_favourites" />
+       tools:layout="@layout/fragment_favourites" >
+      <action
+          android:id="@+id/action_favouritesFragment_to_placesDetailFragment"
+          app:destination="@id/placesDetailFragment" />
+   </fragment>
    <fragment
        android:id="@+id/addPlacesFragment"
        android:name="com.example.globetrotter.ui.addPlaces.AddPlacesFragment"
@@ -102,6 +106,11 @@
       <argument
           android:name="placesId"
           app:argType="string" />
+      <action
+          android:id="@+id/action_placesDetailFragment_to_favouritesFragment"
+          app:destination="@id/favouritesFragment"
+          app:popUpTo="@id/placesDetailFragment"
+          app:popUpToInclusive="true" />
    </fragment>
     <fragment
         android:id="@+id/editProfileFragment"

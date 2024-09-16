@@ -1,12 +1,18 @@
 package com.example.globetrotter.ui.placesDetail
 
+import android.app.Dialog
 import android.content.ContentValues.TAG
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
+import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -30,12 +36,12 @@ class PlacesDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding= FragmentPlacesDetailBinding.inflate(inflater,container,false)
+        binding = FragmentPlacesDetailBinding.inflate(inflater, container, false)
         return binding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initListener()
         viewModel.categoryDrawable.observe(viewLifecycleOwner) { drawableRes ->
             Log.d(TAG, "Category: , Drawable: $drawableRes")
             binding.illusImage.setImageResource(drawableRes)
@@ -44,14 +50,16 @@ class PlacesDetailFragment : Fragment() {
         viewModel.placesResult.observe(viewLifecycleOwner) { placesResource ->
             when (placesResource) {
                 is Resource.Success -> {
-
                     updatePostUI(placesResource.data)
+                    initListener(placesResource.data)
 
-                   // binding.progressBar.visibility = View.GONE
+                    Log.e("TAG3", "onViewCreated: ${placesResource.data}")
+
+                    // binding.progressBar.visibility = View.GONE
                 }
 
                 is Resource.Error -> {
-                  //  binding.progressBar.visibility = View.GONE
+                    //  binding.progressBar.visibility = View.GONE
                 }
 
                 is Resource.Loading -> {
@@ -62,7 +70,16 @@ class PlacesDetailFragment : Fragment() {
         viewModel.fetchPlaces(args.placesId)
 
     }
+
     private fun updatePostUI(places: Places) {
+       // viewModel.checkFavStatus(places.placesId, binding.buttonFav)
+        viewModel.checkVisitStatus(places.placesId, binding.buttonVisited)
+        binding.buttonFav.setOnClickListener {
+            viewModel.toggleLikeStatus(places.placesId, binding.buttonFav)
+        }
+//        binding.buttonVisited.setOnClickListener {
+//            viewModel.toggleVisitedStatus(places.placesId, binding.buttonVisited)
+//        }
         val adapter = PlacesImageAdapter(places.placeImageUrls) {
 
         }
@@ -70,38 +87,46 @@ class PlacesDetailFragment : Fragment() {
         val dotsIndicator = binding.dotsIndicator
         dotsIndicator.setViewPager2(binding.viewPager)
 
-        binding.textPlace.text=places.place
-        binding.textCategory2.text=places.category
-        binding.textLocation2.text=places.location
-        binding.textDescription2.text=places.description
-//        val fullText = places.description
-//        val shortText = if (fullText.length > 100) {
-//            fullText.substring(0, 100) + "..."
-//        } else {
-//            fullText
-//        }
-//
-//        binding.textDescription2.text = shortText
-//
-//        // "more" yazısını ekle
-//        if (fullText.length > 100) {
-//            binding.textDescription2.append(" more")
-//            binding.textDescription2.setTextColor(Color.BLACK)
-//
-//            // More tıklanınca tüm metni göster
-//            binding.textDescription2.setOnClickListener {
-//                binding.textDescription2.text = fullText
-//            }
-//        }
+        binding.textPlace.text = places.place
+        binding.textCategory2.text = places.category
+        binding.textLocation2.text = places.location
+        binding.textDescription2.text = places.description
 
-        binding.textPrice.text="$ ${places.price}"
+        binding.textPrice.text = "$ ${places.price}"
         if (places.price == "Price changes according to place and transport.") {
             binding.textPrice.setTextColor(resources.getColor(R.color.red, null))
         }
     }
-    private fun initListener() {
+
+    private fun initListener(places: Places) {
         binding.buttonBack.setOnClickListener {
             findNavController().popBackStack()
         }
+
+        binding.buttonVisited.setOnClickListener {
+            val dialog = Dialog(requireContext())
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setCancelable(true)
+            dialog.setContentView(R.layout.visited_dialog)
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+            val btnYes: TextView = dialog.findViewById(R.id.btnYes)
+            val btnNo: TextView = dialog.findViewById(R.id.btnNo)
+
+            btnYes.setOnClickListener {
+                viewModel.toggleVisitedStatus(places.placesId, binding.buttonVisited)
+                Toast.makeText(requireContext(), "Added to visited places!", Toast.LENGTH_SHORT).show()
+                dialog.dismiss()
+            }
+
+            btnNo.setOnClickListener {
+                viewModel.toggleVisitedStatus(places.placesId, binding.buttonVisited)
+                Toast.makeText(requireContext(), "Visit removed", Toast.LENGTH_SHORT).show()
+                dialog.dismiss()
+            }
+
+            dialog.show()
+        }
     }
+
 }
