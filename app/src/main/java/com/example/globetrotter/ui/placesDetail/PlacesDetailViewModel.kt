@@ -28,19 +28,26 @@ class PlacesDetailViewModel : ViewModel() {
     val categoryDrawable: LiveData<Int>
         get() = _categoryDrawable
 
+    private val _visitedCount = MutableLiveData<Int>()
+    val visitedCount: LiveData<Int>
+        get() = _visitedCount
+
+    private val _isVisited = MutableLiveData<Boolean>()
+    val isVisited: LiveData<Boolean>
+        get() = _isVisited
+
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean>
         get() = _loading
 
-    //fetch places
-
+    // Fetch places
     fun fetchPlaces(placesId: String) {
         _loading.postValue(true)
         val placesDocumentRef = firestore.collection("Places").document(placesId)
-        Log.d("TAG", "fetchPlaces: $placesId")
+        Log.d(TAG, "fetchPlaces: $placesId")
         placesDocumentRef.get()
             .addOnSuccessListener { documentSnapshot ->
-                Log.d("TAG", "fetchPlaces: success")
+                Log.d(TAG, "fetchPlaces: success")
                 val places = documentSnapshot.toObject(Places::class.java)
                 if (places != null) {
                     category = places.category.trim()
@@ -71,48 +78,96 @@ class PlacesDetailViewModel : ViewModel() {
             }
     }
 
-    //like
-    fun toggleLikeStatus(placesId: String,imageView:ImageView){
-        val  tag = imageView.tag?.toString() ?: ""
+    // Fetch visited count
+    fun fetchVisitedCount(placesId: String) {
+        firestore.collection("Visited").document(placesId)
+            .addSnapshotListener { documentSnapshot, error ->
+                if (error != null) {
+                    Log.e(TAG, "Error fetching visited count: ${error.localizedMessage}")
+                    return@addSnapshotListener
+                }
 
-        if (tag == "favourited"){
+                if (documentSnapshot != null && documentSnapshot.exists()) {
+                    val visitedUsers = documentSnapshot.data?.keys?.size ?: 0
+                    _visitedCount.postValue(visitedUsers)
+                } else {
+                    _visitedCount.postValue(0)
+                }
+            }
+    }
+
+    // Visited click listener
+    fun visitedClickListener(placesId: String) {
+        val currentUserUid = auth.currentUser!!.uid
+
+        if (_isVisited.value == true) {
+            firestore.collection("Visited").document(placesId)
+                .update(currentUserUid, FieldValue.delete())
+                .addOnSuccessListener {
+                    _isVisited.postValue(false)
+                }
+                .addOnFailureListener { exception ->
+                    Log.e(TAG, "Error removing visit: ${exception.localizedMessage}")
+                }
+        } else {
+            val visitData = hashMapOf(
+                currentUserUid to true
+            )
+            firestore.collection("Visited").document(placesId)
+                .set(visitData, SetOptions.merge())
+                .addOnSuccessListener {
+                    _isVisited.postValue(true)
+                }
+                .addOnFailureListener { exception ->
+                    Log.e(TAG, "Error adding visit: ${exception.localizedMessage}")
+                }
+        }
+    }
+
+    // Like
+    fun toggleLikeStatus(placesId: String, imageView: ImageView) {
+        val tag = imageView.tag?.toString() ?: ""
+
+        if (tag == "favourited") {
             imageView.setImageResource(R.drawable.icon_favourites)
             imageView.tag = "favourite"
             removeFavFromFirestore(placesId)
-        }else{
+        } else {
             imageView.setImageResource(R.drawable.icon_favourited)
             imageView.tag = "favourited"
-           addFavToFirestore(placesId)
+            addFavToFirestore(placesId)
         }
     }
-    fun checkFavStatus(placesId: String,imageView:ImageView){
 
+    fun checkFavStatus(placesId: String, imageView: ImageView) {
         firestore.collection("Likes").document(auth.currentUser!!.uid).get()
             .addOnSuccessListener { document ->
-                if (document.exists()){
-                    val likedByCurrentUser= document.getBoolean(placesId) ?: false
-                    if (likedByCurrentUser){
+                if (document.exists()) {
+                    val likedByCurrentUser = document.getBoolean(placesId) ?: false
+                    if (likedByCurrentUser) {
                         imageView.setImageResource(R.drawable.icon_favourited)
-                            imageView.tag = "favourited"
-                    }else{
+                        imageView.tag = "favourited"
+                    } else {
                         imageView.setImageResource(R.drawable.icon_favourites)
-                        imageView.tag = "favourite" 
+                        imageView.tag = "favourite"
                     }
-                }else{
+                } else {
                     imageView.setImageResource(R.drawable.icon_favourites)
-                    imageView.tag="favourite"
+                    imageView.tag = "favourite"
                 }
             }
             .addOnFailureListener { exception ->
-                Log.e("checkFavStatus", "Error checking fav status: $exception", )
+                Log.e("checkFavStatus", "Error checking fav status: $exception")
             }
     }
-    private fun addFavToFirestore(placesId: String){
+
+    private fun addFavToFirestore(placesId: String) {
         val favData = hashMapOf(
             placesId to true
         )
 
-        firestore.collection("Likes").document(auth.currentUser!!.uid).set(favData, SetOptions.merge())
+        firestore.collection("Likes").document(auth.currentUser!!.uid)
+            .set(favData, SetOptions.merge())
             .addOnSuccessListener {
                 Log.d("addFavToFirestore", "Fav added successfully")
             }
@@ -120,7 +175,8 @@ class PlacesDetailViewModel : ViewModel() {
                 Log.e("addFavToFirestore", "Error adding fav: $exception")
             }
     }
-    private fun removeFavFromFirestore(placesId: String){
+
+    private fun removeFavFromFirestore(placesId: String) {
         firestore.collection("Likes").document(auth.currentUser!!.uid)
             .update(placesId, FieldValue.delete())
             .addOnSuccessListener {
@@ -131,64 +187,66 @@ class PlacesDetailViewModel : ViewModel() {
             }
     }
 
-    //visit
-    fun toggleVisitedStatus(placesId: String,imageView:ImageView){
-        val  tag = imageView.tag?.toString() ?: ""
+    // Visit
+    fun toggleVisitedStatus(placesId: String, imageView: ImageView) {
+        val tag = imageView.tag?.toString() ?: ""
 
-        if (tag == "visited"){
+        if (tag == "visited") {
             imageView.setImageResource(R.drawable.icon_visited)
             imageView.tag = "visit"
             removeVisitedFromFirestore(placesId)
-        }else{
+        } else {
             imageView.setImageResource(R.drawable.icon_visited2)
             imageView.tag = "visited"
             addVisitToFirestore(placesId)
         }
     }
-    fun checkVisitStatus(placesId: String,imageView:ImageView){
 
-        firestore.collection("Visited").document(auth.currentUser!!.uid).get()
+    fun checkVisitStatus(placesId: String, imageView: ImageView) {
+        firestore.collection("Visited").document(placesId).get()
             .addOnSuccessListener { document ->
-                if (document.exists()){
-                    val likedByCurrentUser= document.getBoolean(placesId) ?: false
-                    if (likedByCurrentUser){
+                if (document.exists()) {
+                    val visitedByCurrentUser = document.getBoolean(auth.currentUser!!.uid) ?: false
+                    if (visitedByCurrentUser) {
                         imageView.setImageResource(R.drawable.icon_visited2)
                         imageView.tag = "visited"
-                    }else{
+                    } else {
                         imageView.setImageResource(R.drawable.icon_visited)
                         imageView.tag = "visit"
                     }
-                }else{
+                } else {
                     imageView.setImageResource(R.drawable.icon_visited)
-                    imageView.tag="visit"
+                    imageView.tag = "visit"
                 }
             }
             .addOnFailureListener { exception ->
-                Log.e("checkVisitStatus", "Error checking visit status: $exception", )
+                Log.e("checkVisitStatus", "Error checking visit status: $exception")
             }
     }
-    private fun addVisitToFirestore(placesId: String){
-        val favData = hashMapOf(
-            placesId to true
+
+    private fun addVisitToFirestore(placesId: String) {
+        val visitData = hashMapOf(
+            auth.currentUser!!.uid to true
         )
 
-        firestore.collection("Visited").document(auth.currentUser!!.uid).set(favData, SetOptions.merge())
+        firestore.collection("Visited").document(placesId)
+            .set(visitData, SetOptions.merge())
             .addOnSuccessListener {
-                Log.d("addVisitedToFirestore", "Visited added successfully")
+                Log.d("addVisitToFirestore", "Visited added successfully")
             }
             .addOnFailureListener { exception ->
-                Log.e("addVisitedToFirestore", "Error adding Visited: $exception")
-            }
-    }
-    private fun removeVisitedFromFirestore(placesId: String){
-        firestore.collection("Visited").document(auth.currentUser!!.uid)
-            .update(placesId, FieldValue.delete())
-            .addOnSuccessListener {
-                Log.d("removeFavFromFirestore", "Fav removed successfully")
-            }
-            .addOnFailureListener { exception ->
-                Log.e("removeFavFromFirestore", "Error removing fav: $exception")
+                Log.e("addVisitToFirestore", "Error adding visited: $exception")
             }
     }
 
+    private fun removeVisitedFromFirestore(placesId: String) {
+        firestore.collection("Visited").document(placesId)
+            .update(auth.currentUser!!.uid, FieldValue.delete())
+            .addOnSuccessListener {
+                Log.d("removeVisitedFromFirestore", "Visited removed successfully")
+            }
+            .addOnFailureListener { exception ->
+                Log.e("removeVisitedFromFirestore", "Error removing visited: $exception")
+            }
+    }
 }

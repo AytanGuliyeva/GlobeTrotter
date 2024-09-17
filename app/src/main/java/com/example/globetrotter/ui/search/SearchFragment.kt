@@ -38,6 +38,10 @@ class SearchFragment : Fragment() {
         return binding.root
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         auth = Firebase.auth
@@ -48,6 +52,7 @@ class SearchFragment : Fragment() {
         observeCategories()
 
         viewModel.fetchPlaces()
+        //oncreate true false
         viewModel.fetchCategoriesAndAddChips(binding.chipGroup)
 
         setupChipGroupListener()

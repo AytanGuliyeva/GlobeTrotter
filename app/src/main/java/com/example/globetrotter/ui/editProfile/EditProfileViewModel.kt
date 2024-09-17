@@ -1,4 +1,4 @@
-package com.example.globetrotter.editProfile
+package com.example.globetrotter.ui.editProfile
 
 import android.app.ProgressDialog
 import androidx.lifecycle.LiveData

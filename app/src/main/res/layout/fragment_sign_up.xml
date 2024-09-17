@@ -76,6 +76,8 @@
         android:layout_marginTop="20dp"
         android:backgroundTint="@color/blue"
         android:text="Sign Up"
+        app:layout_constraintVertical_bias="0.2"
+        app:layout_constraintBottom_toTopOf="@id/btnAccount"
         app:layout_constraintEnd_toEndOf="@id/guideline2"
         app:layout_constraintStart_toStartOf="@id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/edtEmail" />
@@ -86,8 +88,7 @@
         android:layout_height="wrap_content"
         android:text="Already have an account? Log in"
         android:textColor="@color/blue"
-        android:textSize="20sp"
-        app:drawableStartCompat="@drawable/icon_back"
+        app:drawableStartCompat="@drawable/icon_back2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/guideline2"
         app:layout_constraintStart_toStartOf="@id/guideline"

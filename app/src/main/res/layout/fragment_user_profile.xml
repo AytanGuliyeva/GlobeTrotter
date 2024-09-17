@@ -92,6 +92,15 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/changePassword"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/iconNext"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/editProfile"
+                android:layout_marginEnd="5dp"
+                android:src="@drawable/icon_next"
+                app:layout_constraintBottom_toBottomOf="@id/editProfile"/>
 
             <TextView
                 android:id="@+id/changePassword"
@@ -105,6 +114,16 @@
                 app:drawableStartCompat="@drawable/icon_password"
                 app:layout_constraintStart_toStartOf="@id/editProfile"
                 app:layout_constraintTop_toBottomOf="@id/editProfile" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/iconNext2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/changePassword"
+                android:layout_marginEnd="5dp"
+                android:src="@drawable/icon_next"
+                app:layout_constraintBottom_toBottomOf="@id/changePassword"/>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
@@ -128,6 +147,16 @@
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="@id/editProfile"
                 app:layout_constraintTop_toBottomOf="@id/changePassword" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/iconNext3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/language"
+                android:layout_marginEnd="5dp"
+                android:src="@drawable/icon_next"
+                app:layout_constraintBottom_toBottomOf="@id/language"/>
 
 
             <View

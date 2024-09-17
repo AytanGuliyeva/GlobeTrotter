@@ -181,7 +181,7 @@
                 android:layout_height="36dp"
                 android:layout_marginStart="10dp"
                 android:background="@drawable/background"
-                android:backgroundTint="@color/blue"
+                android:backgroundTint="@color/blue2"
                 android:contentDescription="Info Button"
                 android:src="@drawable/icon_connect"
                 app:layout_constraintTop_toTopOf="parent"

@@ -114,7 +114,7 @@
    </fragment>
     <fragment
         android:id="@+id/editProfileFragment"
-        android:name="com.example.globetrotter.editProfile.EditProfileFragment"
+        android:name="com.example.globetrotter.ui.editProfile.EditProfileFragment"
         android:label="fragment_edit_profile"
         tools:layout="@layout/fragment_edit_profile" >
        <action

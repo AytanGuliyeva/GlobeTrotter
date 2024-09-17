@@ -64,6 +64,8 @@
         android:layout_marginTop="10dp"
         android:backgroundTint="@color/blue"
         android:text="Login"
+        app:layout_constraintVertical_bias="0.2"
+        app:layout_constraintBottom_toTopOf="@id/btnCreateNewAccount"
         app:layout_constraintEnd_toEndOf="@id/guideline2"
         app:layout_constraintStart_toStartOf="@id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/edtPassword" />
@@ -86,7 +88,6 @@
         android:layout_height="wrap_content"
         android:text="Or create new account"
         android:textColor="@color/blue"
-        android:textSize="20sp"
         app:drawableEndCompat="@drawable/icon_next"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/guideline2"

@@ -47,9 +47,11 @@ class PlacesDetailFragment : Fragment() {
             binding.illusImage.setImageResource(drawableRes)
         }
 
+        observeVisitersCount()
         viewModel.placesResult.observe(viewLifecycleOwner) { placesResource ->
             when (placesResource) {
                 is Resource.Success -> {
+                    viewModel.fetchVisitedCount(placesResource.data.placesId)
                     updatePostUI(placesResource.data)
                     initListener(placesResource.data)
 
@@ -71,8 +73,18 @@ class PlacesDetailFragment : Fragment() {
 
     }
 
+    private fun observeVisitersCount() {
+        viewModel.visitedCount.observe(viewLifecycleOwner) { visitersCount ->
+            if (visitersCount <= 1) {
+                binding.textVisitedCount.text = "$visitersCount visiter"
+            } else {
+                binding.textVisitedCount.text = "$visitersCount visiters"
+            }
+        }
+    }
+
     private fun updatePostUI(places: Places) {
-       // viewModel.checkFavStatus(places.placesId, binding.buttonFav)
+        viewModel.checkFavStatus(places.placesId, binding.buttonFav)
         viewModel.checkVisitStatus(places.placesId, binding.buttonVisited)
         binding.buttonFav.setOnClickListener {
             viewModel.toggleLikeStatus(places.placesId, binding.buttonFav)
@@ -115,7 +127,8 @@ class PlacesDetailFragment : Fragment() {
 
             btnYes.setOnClickListener {
                 viewModel.toggleVisitedStatus(places.placesId, binding.buttonVisited)
-                Toast.makeText(requireContext(), "Added to visited places!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Added to visited places!", Toast.LENGTH_SHORT)
+                    .show()
                 dialog.dismiss()
             }
 

@@ -79,7 +79,9 @@ class SearchViewModel : ViewModel() {
             } else {
                 selectedCategories.remove(category)
             }
+            fetchPlacesByCategories()
         }
+
         chipGroup.addView(chip)
     }
 
@@ -125,7 +127,6 @@ class SearchViewModel : ViewModel() {
     }
 
     fun fetchPlaces() {
-        if (isPlacesFetched) return
         _loading.postValue(true)
 
         firestore.collection("Places").get()
@@ -135,7 +136,6 @@ class SearchViewModel : ViewModel() {
                 }
                 _placesResult.postValue(Resource.Success(placesList))
                 _loading.postValue(false)
-                isPlacesFetched = true
             }
             .addOnFailureListener { exception ->
                 _placesResult.postValue(Resource.Error(exception))
@@ -144,6 +144,15 @@ class SearchViewModel : ViewModel() {
     }
 
     fun fetchPlacesByCategories() {
+
+        if (selectedCategories.isEmpty()) {
+            Log.d("SearchViewModel", "No categories selected")
+            fetchPlaces()
+            return
+        }
+
+        Log.d("SearchViewModel", "Selected categories: $selectedCategories")
+
         _loading.postValue(true)
         firestore.collection("Places")
             .whereIn("category", selectedCategories)
