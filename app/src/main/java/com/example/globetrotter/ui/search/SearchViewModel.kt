@@ -65,10 +65,13 @@ class SearchViewModel : ViewModel() {
 
     private fun addChipToGroup(chipGroup: ChipGroup, category: String) {
         val context = chipGroup.context
+        val trimmedCategory = category.trim()
         val chip = Chip(context).apply {
             isCheckable = true
-            text = category
-            setChipIconByCategory(context, this, category)
+            text = trimmedCategory
+            setChipIconByCategory(context, this, trimmedCategory)
+            //   text = category
+            // setChipIconByCategory(context, this, category)
             setupChipStyle(context, this)
         }
         chip.setOnCheckedChangeListener { _, isChecked ->
@@ -155,7 +158,7 @@ class SearchViewModel : ViewModel() {
 
         _loading.postValue(true)
         firestore.collection("Places")
-            .whereIn("category", selectedCategories)
+            .whereIn("category", selectedCategories.map { it.trim() })
             .get()
             .addOnSuccessListener { documents ->
                 val filteredPlaces = documents.mapNotNull { it.toObject(Places::class.java) }

@@ -11,16 +11,24 @@
         android:layout_height="match_parent"
         android:background="@color/white">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/btnBack"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:background="@color/white"
-            android:padding="5dp"
-            android:src="@drawable/icon_back"
+            app:cardCornerRadius="10dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0">
+
+            <ImageView
+                android:id="@+id/buttonBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/blue2"
+                android:padding="5dp"
+                android:src="@drawable/icon_back" />
+        </androidx.cardview.widget.CardView>
 
         <ImageView
             android:id="@+id/imgAddPost"
@@ -31,7 +39,7 @@
             android:src="@drawable/add_post"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btnBack" />
+            app:layout_constraintTop_toBottomOf="@id/cardView1" />
 
         <EditText
             android:id="@+id/edtPlace"

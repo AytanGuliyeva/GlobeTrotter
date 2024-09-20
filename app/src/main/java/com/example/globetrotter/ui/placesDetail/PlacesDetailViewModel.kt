@@ -3,6 +3,7 @@ package com.example.globetrotter.ui.placesDetail
 import android.content.ContentValues.TAG
 import android.util.Log
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -39,6 +40,7 @@ class PlacesDetailViewModel : ViewModel() {
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean>
         get() = _loading
+
 
     // Fetch places
     fun fetchPlaces(placesId: String) {
@@ -110,9 +112,7 @@ class PlacesDetailViewModel : ViewModel() {
                     Log.e(TAG, "Error removing visit: ${exception.localizedMessage}")
                 }
         } else {
-            val visitData = hashMapOf(
-                currentUserUid to true
-            )
+            val visitData = hashMapOf(currentUserUid to true)
             firestore.collection("Visited").document(placesId)
                 .set(visitData, SetOptions.merge())
                 .addOnSuccessListener {
@@ -124,6 +124,7 @@ class PlacesDetailViewModel : ViewModel() {
         }
     }
 
+//
     // Like
     fun toggleLikeStatus(placesId: String, imageView: ImageView) {
         val tag = imageView.tag?.toString() ?: ""

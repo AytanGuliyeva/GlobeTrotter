@@ -7,5 +7,6 @@ data class Overviews(
     val userId: String,
     val placesId: String,
     val overviewId: String,
-    val time: Timestamp
-)
+    val time: Timestamp,
+    val imageUrl: String = "",
+    )

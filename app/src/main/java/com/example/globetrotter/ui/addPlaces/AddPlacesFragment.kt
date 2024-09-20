@@ -55,7 +55,7 @@ class AddPlacesFragment : Fragment() {
     }
 
     private fun initNavigationListeners() {
-        binding.btnBack.setOnClickListener {
+        binding.cardView1.setOnClickListener {
             findNavController().popBackStack()
 
         }

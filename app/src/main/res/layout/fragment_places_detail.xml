@@ -28,13 +28,13 @@
         android:id="@+id/dotsIndicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_margin="5dp"
         app:dotsColor="@color/grey"
         app:dotsSize="10dp"
-        app:selectedDotColor="@color/blue2"
+        app:selectedDotColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/viewPager"/>
+        app:layout_constraintBottom_toBottomOf="@id/viewPager"/>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView1"
@@ -100,7 +100,7 @@
         android:textSize="18sp"
         android:layout_marginBottom="5dp"
         app:drawableStartCompat="@drawable/icon_visited"
-        app:layout_constraintBottom_toBottomOf="@id/viewPager"
+        app:layout_constraintBottom_toTopOf="@id/dotsIndicator"
         app:layout_constraintStart_toStartOf="@id/textPlace"
         app:layout_constraintTop_toBottomOf="@id/textPlace"
         tools:text="0" />

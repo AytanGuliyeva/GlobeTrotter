@@ -22,14 +22,22 @@ import com.example.globetrotter.R
 import com.example.globetrotter.base.Resource
 import com.example.globetrotter.data.Places
 import com.example.globetrotter.databinding.FragmentPlacesDetailBinding
+import com.example.globetrotter.ui.addYourTravel.AddYourTravelFragment
 import com.example.globetrotter.ui.getStarted.adapter.ViewPagerAdapter
 import com.example.globetrotter.ui.search.adapter.PlacesImageAdapter
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class PlacesDetailFragment : Fragment() {
     private lateinit var binding: FragmentPlacesDetailBinding
     private val viewModel: PlacesDetailViewModel by viewModels()
     val args: PlacesDetailFragmentArgs by navArgs()
+    lateinit var auth: FirebaseAuth
+    lateinit var firestore: FirebaseFirestore
 
 
     override fun onCreateView(
@@ -42,16 +50,21 @@ class PlacesDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        auth = Firebase.auth
+        firestore = Firebase.firestore
         viewModel.categoryDrawable.observe(viewLifecycleOwner) { drawableRes ->
             Log.d(TAG, "Category: , Drawable: $drawableRes")
             binding.illusImage.setImageResource(drawableRes)
         }
+
 
         observeVisitersCount()
         viewModel.placesResult.observe(viewLifecycleOwner) { placesResource ->
             when (placesResource) {
                 is Resource.Success -> {
                     viewModel.fetchVisitedCount(placesResource.data.placesId)
+                    viewModel.checkVisitStatus(placesResource.data.placesId, binding.buttonVisited)
+
                     updatePostUI(placesResource.data)
                     initListener(placesResource.data)
 
@@ -126,17 +139,23 @@ class PlacesDetailFragment : Fragment() {
             val btnNo: TextView = dialog.findViewById(R.id.btnNo)
 
             btnYes.setOnClickListener {
-                viewModel.toggleVisitedStatus(places.placesId, binding.buttonVisited)
-                Toast.makeText(requireContext(), "Added to visited places!", Toast.LENGTH_SHORT)
-                    .show()
+//                if (!viewModel.isVisited.value!!) {
+                    val bottomSheet = AddYourTravelFragment.newInstance(places.placesId)
+                    bottomSheet.show(childFragmentManager, bottomSheet.tag)
+                    viewModel.visitedClickListener(places.placesId)
+                    viewModel.toggleVisitedStatus(places.placesId, binding.buttonVisited)
+             //   }
                 dialog.dismiss()
             }
 
             btnNo.setOnClickListener {
-                viewModel.toggleVisitedStatus(places.placesId, binding.buttonVisited)
-                Toast.makeText(requireContext(), "Visit removed", Toast.LENGTH_SHORT).show()
+            //    if (viewModel.isVisited.value!!) {
+                    viewModel.toggleVisitedStatus(places.placesId, binding.buttonVisited)
+                    Toast.makeText(requireContext(), "Visit removed", Toast.LENGTH_SHORT).show()
+               // }
                 dialog.dismiss()
             }
+
 
             dialog.show()
         }

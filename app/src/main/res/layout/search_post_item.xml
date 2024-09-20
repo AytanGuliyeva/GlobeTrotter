@@ -15,7 +15,7 @@
         android:layout_margin="10dp"
         android:clickable="true"
         android:focusable="true"
-        app:layout_constraintBottom_toTopOf="@id/dotsIndicator"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -24,24 +24,23 @@
         android:layout_width="wrap_content"
         app:dotsSize="5dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-
         app:dotsColor="@color/grey"
-        app:selectedDotColor="@color/blue2"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_margin="5dp"
+        app:selectedDotColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@id/viewPager"
         app:layout_constraintStart_toStartOf="@id/viewPager"
         app:layout_constraintEnd_toEndOf="@id/viewPager"
-        app:layout_constraintTop_toBottomOf="@id/viewPager"/>
+        />
 
 
     <TextView
         android:id="@+id/placeName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_marginHorizontal="10dp"
         android:maxLines="1"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="@id/viewPager"
+        app:layout_constraintBottom_toTopOf="@id/dotsIndicator"
         app:layout_constraintStart_toStartOf="@id/viewPager" />
 
 

@@ -111,6 +111,9 @@
           app:destination="@id/favouritesFragment"
           app:popUpTo="@id/placesDetailFragment"
           app:popUpToInclusive="true" />
+      <action
+          android:id="@+id/action_placesDetailFragment_to_addYourTravelFragment"
+          app:destination="@id/addYourTravelFragment" />
    </fragment>
     <fragment
         android:id="@+id/editProfileFragment"
@@ -123,6 +126,17 @@
            app:popUpTo="@id/editProfileFragment"
            app:popUpToInclusive="true" />
     </fragment>
+   <fragment
+       android:id="@+id/addYourTravelFragment"
+       android:name="com.example.globetrotter.ui.addYourTravel.AddYourTravelFragment"
+       android:label="fragment_add_your_travel"
+       tools:layout="@layout/fragment_add_your_travel" >
+      <action
+          android:id="@+id/action_addYourTravelFragment_to_placesDetailFragment"
+          app:destination="@id/placesDetailFragment"
+          app:popUpTo="@id/addYourTravelFragment"
+          app:popUpToInclusive="true" />
+   </fragment>
 </navigation>
 
 

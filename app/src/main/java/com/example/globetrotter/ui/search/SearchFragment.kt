@@ -58,6 +58,7 @@ class SearchFragment : Fragment() {
         setupChipGroupListener()
         setupSearchViewListener()
     }
+
     private fun setupSwipeRefreshLayout(data: List<Places>) {
         binding.swipeRefreshLayout.setOnRefreshListener {
             placesAdapter.submitList(data)
@@ -69,14 +70,15 @@ class SearchFragment : Fragment() {
         placesAdapter = PlacesAdapter { place ->
             placesDetail(place.placesId)
         }
-        binding.rvPost.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        binding.rvPost.layoutManager =
+            StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         binding.rvPost.adapter = placesAdapter
     }
 
     private fun setupChipGroupListener() {
         binding.chipGroup.setOnCheckedChangeListener { group, checkedId ->
             val chip = group.findViewById<Chip>(checkedId)
-            val category = chip?.text.toString()
+            val category = chip?.text.toString().trim()
 
             if (chip?.isChecked == true) {
                 if (!selectedCategories.contains(category)) {
@@ -156,7 +158,10 @@ class SearchFragment : Fragment() {
         viewModel.categories.observe(viewLifecycleOwner) { categoriesResource ->
             when (categoriesResource) {
                 is Resource.Success -> {
-                    Log.d("SearchFragment", "Categories fetched successfully: ${categoriesResource.data}")
+                    Log.d(
+                        "SearchFragment",
+                        "Categories fetched successfully: ${categoriesResource.data}"
+                    )
                 }
 
                 is Resource.Error -> {
@@ -173,7 +178,6 @@ class SearchFragment : Fragment() {
             }
         }
     }
-
 
 
     private fun showLoading(isLoading: Boolean) {

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.addYourTravel.AddYourTravelFragment">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textAddStory"
+        android:text="Do you want to add story?"
+        android:textSize="20sp"
+        android:textColor="@color/blue2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="10dp"/>
+    <ImageView
+        android:id="@+id/imgAddPost"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="20dp"
+        android:contentDescription="image"
+        android:src="@drawable/add_post"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textAddStory" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textAddCaption"
+        android:text="Add the caption! "
+        android:textSize="20sp"
+        android:layout_margin="10dp"
+        android:textColor="@color/blue2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imgAddPost"
+        android:layout_marginTop="10dp"/>
+    <EditText
+        android:id="@+id/edtCaption"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_marginVertical="20dp"
+        android:background="@drawable/background"
+        android:hint="Caption..."
+        android:padding="13dp"
+        android:inputType="textMultiLine"
+        android:textSize="20sp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textAddCaption" />
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_visited"
+        android:text="Add your travel..."
+        android:id="@+id/buttonAdd"
+        android:textColor="@color/white"
+        android:layout_margin="5dp"
+        android:backgroundTint="@color/blue2"
+        app:layout_constraintStart_toStartOf="@id/edtCaption"
+        app:layout_constraintTop_toBottomOf="@id/edtCaption"
+        app:layout_constraintEnd_toEndOf="@id/edtCaption"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/edtCaption"
+        app:layout_constraintEnd_toEndOf="@id/edtCaption"
+        app:layout_constraintTop_toBottomOf="@id/buttonAdd"
+        android:text="I don't want to add image/caption"
+        android:padding="13dp"
+        android:id="@+id/buttonDismess"
+        android:layout_margin="10dp"
+        android:background="@drawable/background"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/blue"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>
