@@ -10,11 +10,18 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
 import com.example.globetrotter.R
 import com.example.globetrotter.base.Resource
+import com.example.globetrotter.data.PlaceWithVisitedCount
 import com.example.globetrotter.databinding.FragmentDiscoverActivitiesBinding
+import com.example.globetrotter.ui.discoverActivities.adapter.CategoryAdapter
+import com.example.globetrotter.ui.discoverActivities.adapter.TopPlacesAdapter
 import com.example.globetrotter.ui.discoverActivities.story.StoryAdapter
+import com.example.globetrotter.ui.search.SearchFragmentDirections
+import com.example.globetrotter.ui.search.adapter.PlacesAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -27,7 +34,8 @@ class DiscoverActivitiesFragment : Fragment() {
     lateinit var auth: FirebaseAuth
     lateinit var firestore: FirebaseFirestore
     private lateinit var storyAdapter: StoryAdapter
-
+    private lateinit var categoryAdapter: CategoryAdapter
+    private lateinit var topPlacesAdapter: TopPlacesAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,53 +49,71 @@ class DiscoverActivitiesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         auth = Firebase.auth
         firestore = Firebase.firestore
-        initNavigationListeners()
-
-        if (auth.currentUser?.uid == "Jcs1FXd95xfRNPibSm3Z4IFP6513") {
-            binding.floatActionButton.visibility = View.VISIBLE
-        }
-
-        viewModel.fetchInformation()
-        viewModel.fetchCategoriesAndAddChips(binding.chipGroup)
-        Log.e("TAG", "onViewCreated: ${viewModel.fetchCategoriesAndAddChips(binding.chipGroup)}")
-//        viewModel.userInformation.observe(viewLifecycleOwner) { userResource ->
-//            when (userResource) {
-//                is Resource.Success -> {
-//
-//                }
-//
-//                is Resource.Error -> {
-//                    Toast.makeText(
-//                        requireContext(),
-//                        "${userResource.exception}",
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//
-//                }
-//
-//                is Resource.Loading -> {
-//                }
-//            }
-//        }
-        viewModel.categories.observe(viewLifecycleOwner) { categoriesResource ->
-            when (categoriesResource) {
+        setupRecyclerView()
+        viewModel.fetchPlaces()
+        viewModel.fetchCategories()
+        viewModel.places.observe(viewLifecycleOwner) { placesResource ->
+            when (placesResource) {
                 is Resource.Success -> {
-                    Log.d("TAG", "Categories fetched successfully: ${categoriesResource.data}")
+                    categoryAdapter.categoryPlaces.clear()
+                    categoryAdapter.categoryPlaces.addAll(placesResource.data ?: emptyList())
+                    categoryAdapter.notifyDataSetChanged()
                 }
 
                 is Resource.Error -> {
                     Toast.makeText(
                         requireContext(),
-                        "Failed to fetch categories: ${categoriesResource.exception}",
+                        "Failed to fetch places: ${placesResource.exception}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+                is Resource.Loading -> {}
+            }
+        }
+
+        viewModel.categories.observe(viewLifecycleOwner) { categoriesResource ->
+            when (categoriesResource) {
+                is Resource.Success -> {
+                    categoryAdapter.submitList(categoriesResource.data)
+                }
+
+                is Resource.Error -> {
+                    Toast.makeText(
+                        requireContext(),
+                        "Kategoriler alınamadı: ${categoriesResource.exception}",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
 
                 is Resource.Loading -> {
-                    // Optional: Show loading indicator
                 }
             }
         }
+        initNavigationListeners()
+        if (auth.currentUser?.uid == "Jcs1FXd95xfRNPibSm3Z4IFP6513") {
+            binding.floatActionButton.visibility = View.VISIBLE
+        }
+        viewModel.fetchInformation()
+
+    }
+
+    private fun setupRecyclerView() {
+        categoryAdapter = CategoryAdapter({ place ->
+            placesDetail(place.placesId)
+        }, mutableListOf())
+        binding.rvCategory.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvCategory.adapter = categoryAdapter
+
+
+    }
+
+    private fun placesDetail(placesId: String) {
+        val action =
+            DiscoverActivitiesFragmentDirections.actionDiscoverActivitiesFragmentToPlacesDetailFragment(
+                placesId
+            )
+        findNavController().navigate(action)
     }
 
     private fun initNavigationListeners() {

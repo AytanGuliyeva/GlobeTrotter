@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:nestedScrollingEnabled="false"
     tools:context=".ui.discoverActivities.DiscoverActivitiesFragment">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -24,12 +25,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        android:drawablePadding="13dp"
+        android:text="GlobeTrotter"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:drawablePadding="13dp"
         app:civ_border_color="@color/blue"
         app:civ_border_width="2dp"
-        android:text="GlobeTrotter"
         app:drawableStartCompat="@drawable/app_icon_3"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -39,9 +40,9 @@
         android:id="@+id/textDiscover"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:text="Let's explore the World!"
         android:textStyle="italic"
-        android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="@id/textGlobe"
         app:layout_constraintTop_toBottomOf="@id/textGlobe" />
 
@@ -119,38 +120,33 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/rvStory" />
 
-    <HorizontalScrollView
-        android:id="@+id/chipScrollView"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginHorizontal="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+    <TextView
+        android:id="@+id/textTopPlaces"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:drawablePadding="5dp"
+        android:padding="5dp"
+        android:text="Top Places..."
+        android:textColor="@color/blue"
+        android:textSize="23sp"
+        app:drawableEndCompat="@drawable/icon_flight"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view2"
-        tools:ignore="MissingConstraints">
+        app:layout_constraintTop_toBottomOf="@id/view2" />
 
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipGroup"
-            style="@style/Widget.Material3.Chip.Input"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/editTextFilterByName"
-            app:layout_constraintTop_toBottomOf="@+id/editTextFilterByName"
-            app:singleLine="true">
-
-        </com.google.android.material.chip.ChipGroup>
-    </HorizontalScrollView>
-
-    <View
-        android:id="@+id/view3"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvCategory"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginTop="10dp"
-        android:background="@color/grey2"
+        android:contentDescription="posts"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/chipScrollView" />
+        app:layout_constraintTop_toBottomOf="@+id/textTopPlaces"
+        tools:listitem="@layout/item_top_activities" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+

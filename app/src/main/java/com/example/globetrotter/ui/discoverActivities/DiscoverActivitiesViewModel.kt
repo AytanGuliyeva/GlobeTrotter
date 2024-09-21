@@ -1,5 +1,6 @@
 package com.example.globetrotter.ui.discoverActivities
 
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -13,6 +14,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.globetrotter.R
 import com.example.globetrotter.base.ConstValues
 import com.example.globetrotter.base.Resource
+import com.example.globetrotter.data.PlaceWithVisitedCount
+import com.example.globetrotter.data.Places
 import com.example.globetrotter.data.Users
 import com.example.globetrotter.retrofit.RepositoryAmadeus
 import com.example.globetrotter.retrofit.model.Activity
@@ -34,6 +37,15 @@ class DiscoverActivitiesViewModel() : ViewModel() {
 
     private val uniqueCategories = mutableSetOf<String>()
 
+
+    private val _visitedCount = MutableLiveData<Int>()
+    val visitedCount: LiveData<Int>
+        get() = _visitedCount
+
+    private val _isVisited = MutableLiveData<Boolean>()
+    val isVisited: LiveData<Boolean>
+        get() = _isVisited
+
     private val _userInformation = MutableLiveData<Resource<Users>>()
     val userInformation: LiveData<Resource<Users>>
         get() = _userInformation
@@ -41,6 +53,108 @@ class DiscoverActivitiesViewModel() : ViewModel() {
     private val _categories = MutableLiveData<Resource<List<String>>>()
     val categories: LiveData<Resource<List<String>>>
         get() = _categories
+    private val _places = MutableLiveData<Resource<List<Places>>>()
+    val places: LiveData<Resource<List<Places>>> get() = _places
+
+
+    private val _placesWithVisitedCount = MutableLiveData<List<PlaceWithVisitedCount>>()
+    val placesWithVisitedCount: LiveData<List<PlaceWithVisitedCount>>
+        get() = _placesWithVisitedCount
+
+    fun fetchPlaces() {
+        _places.value = Resource.Loading // Yüklenme durumunu belirt
+
+        // Veriyi Firestore'dan çekme işlemi
+        firestore.collection("Places")
+            .get()
+            .addOnSuccessListener { documents ->
+                val placesList = documents.map { document ->
+                    document.toObject(Places::class.java) // Place nesnesine dönüştür
+                }
+                _places.value = Resource.Success(placesList) // Başarılı bir şekilde veriyi al
+            }
+            .addOnFailureListener { exception ->
+                _places.value = Resource.Error(exception) // Hata durumunu belirt
+            }
+    }
+    fun fetchPlacesWithVisitedCount() {
+        firestore.collection("Places")
+            .get()
+            .addOnSuccessListener { placesSnapshot ->
+                val placesList = mutableListOf<PlaceWithVisitedCount>()
+                val batchSize = placesSnapshot.size()
+
+                for (document in placesSnapshot.documents) {
+                    val placeId = document.id
+                    val placeName = document.getString("place") ?: ""
+                    val category = document.getString("category") ?: ""
+
+                    // Fetch visited count for each place
+                    firestore.collection("Visited").document(placeId)
+                        .get()
+                        .addOnSuccessListener { visitedSnapshot ->
+                            val visitedCount = visitedSnapshot.data?.keys?.size ?: 0
+
+                            // Add the place with visited count to the list
+                            val placeWithVisitedCount = PlaceWithVisitedCount(
+                                placeId = placeId,
+                                placeName = placeName,
+                                category = category,
+                                visitedCount = visitedCount
+                            )
+                            placesList.add(placeWithVisitedCount)
+
+                            // Once all places are fetched, post the result to LiveData
+                            if (placesList.size == batchSize) {
+                                _placesWithVisitedCount.postValue(placesList.sortedByDescending { it.visitedCount })
+                            }
+                        }
+                        .addOnFailureListener { exception ->
+                            Log.e(TAG, "Error fetching visited count: ${exception.localizedMessage}")
+                        }
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.e(TAG, "Error fetching places: ${exception.localizedMessage}")
+            }
+    }
+
+
+//    fun fetchVisitedCount(placesId: String) {
+//        firestore.collection("Visited").document(placesId)
+//            .addSnapshotListener { documentSnapshot, error ->
+//                if (error != null) {
+//                    Log.e(TAG, "Error fetching visited count: ${error.localizedMessage}")
+//                    return@addSnapshotListener
+//                }
+//
+//                if (documentSnapshot != null && documentSnapshot.exists()) {
+//                    val visitedUsers = documentSnapshot.data?.keys?.size ?: 0
+//                    if (visitedUsers>=3){
+//                    _visitedCount.postValue(visitedUsers)}
+//                } else {
+//                    _visitedCount.postValue(0)
+//                }
+//            }
+//    }
+
+    fun fetchCategories() {
+        _categories.postValue(Resource.Loading)
+        firestore.collection("Places")
+            .get()
+            .addOnSuccessListener { documents ->
+                val uniqueCategories = mutableSetOf<String>()
+                for (document in documents) {
+                    document.getString("category")?.trim()?.let { category ->
+                        uniqueCategories.add(category)
+                    }
+                }
+                _categories.postValue(Resource.Success(uniqueCategories.toList()))
+            }
+            .addOnFailureListener { exception ->
+                _categories.postValue(Resource.Error(exception))
+            }
+    }
 
 
     fun fetchInformation() {

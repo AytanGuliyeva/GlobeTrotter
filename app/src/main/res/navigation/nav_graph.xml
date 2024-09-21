@@ -49,6 +49,9 @@
       <action
           android:id="@+id/action_discoverActivitiesFragment_to_addPlacesFragment"
           app:destination="@id/addPlacesFragment" />
+      <action
+          android:id="@+id/action_discoverActivitiesFragment_to_placesDetailFragment"
+          app:destination="@id/placesDetailFragment" />
    </fragment>
    <fragment
        android:id="@+id/userProfileFragment"
@@ -114,6 +117,11 @@
       <action
           android:id="@+id/action_placesDetailFragment_to_addYourTravelFragment"
           app:destination="@id/addYourTravelFragment" />
+      <action
+          android:id="@+id/action_placesDetailFragment_to_discoverActivitiesFragment"
+          app:destination="@id/discoverActivitiesFragment"
+          app:popUpTo="@id/placesDetailFragment"
+          app:popUpToInclusive="true" />
    </fragment>
     <fragment
         android:id="@+id/editProfileFragment"
