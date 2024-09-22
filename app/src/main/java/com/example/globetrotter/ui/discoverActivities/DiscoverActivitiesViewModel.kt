@@ -33,14 +33,7 @@ import kotlin.math.log
 class DiscoverActivitiesViewModel() : ViewModel() {
     private var firestore = FirebaseFirestore.getInstance()
     private var auth: FirebaseAuth = FirebaseAuth.getInstance()
-
-
     private val uniqueCategories = mutableSetOf<String>()
-
-
-    private val _visitedCount = MutableLiveData<Int>()
-    val visitedCount: LiveData<Int>
-        get() = _visitedCount
 
     private val _isVisited = MutableLiveData<Boolean>()
     val isVisited: LiveData<Boolean>
@@ -53,91 +46,56 @@ class DiscoverActivitiesViewModel() : ViewModel() {
     private val _categories = MutableLiveData<Resource<List<String>>>()
     val categories: LiveData<Resource<List<String>>>
         get() = _categories
+
     private val _places = MutableLiveData<Resource<List<Places>>>()
     val places: LiveData<Resource<List<Places>>> get() = _places
 
+    fun fetchPopularPlaces() {
+        _places.value = Resource.Loading
+        firestore.collection("Visited")
+            .get()
+            .addOnSuccessListener { documents ->
+                val popularPlacesList = mutableListOf<Places>()
+                for (document in documents) {
+                    val visitedUsers = document.data?.keys?.size ?: 0
+                    if (visitedUsers != null && visitedUsers >= 3) {
+                        val placesId = document.id
+                        firestore.collection("Places").document(placesId).get()
+                            .addOnSuccessListener { placeDocument ->
+                                if (placeDocument.exists()) {
+                                    val place = placeDocument.toObject(Places::class.java)
+                                    if (place != null) {
+                                        popularPlacesList.add(place)
+                                    }
+                                }
+                                _places.value = Resource.Success(popularPlacesList)
+                            }
+                            .addOnFailureListener { exception ->
+                                _places.value = Resource.Error(exception)
+                            }
+                    }
+                }
+            }
+            .addOnFailureListener { exception ->
+                _places.value = Resource.Error(exception)
+            }
+    }
 
-    private val _placesWithVisitedCount = MutableLiveData<List<PlaceWithVisitedCount>>()
-    val placesWithVisitedCount: LiveData<List<PlaceWithVisitedCount>>
-        get() = _placesWithVisitedCount
-
-    fun fetchPlaces() {
-        _places.value = Resource.Loading // Yüklenme durumunu belirt
-
-        // Veriyi Firestore'dan çekme işlemi
+   /* fun fetchPlaces() {
+        _places.value = Resource.Loading
         firestore.collection("Places")
             .get()
             .addOnSuccessListener { documents ->
                 val placesList = documents.map { document ->
-                    document.toObject(Places::class.java) // Place nesnesine dönüştür
+                    document.toObject(Places::class.java)
                 }
-                _places.value = Resource.Success(placesList) // Başarılı bir şekilde veriyi al
+
+                _places.value = Resource.Success(placesList)
             }
             .addOnFailureListener { exception ->
-                _places.value = Resource.Error(exception) // Hata durumunu belirt
+                _places.value = Resource.Error(exception)
             }
-    }
-    fun fetchPlacesWithVisitedCount() {
-        firestore.collection("Places")
-            .get()
-            .addOnSuccessListener { placesSnapshot ->
-                val placesList = mutableListOf<PlaceWithVisitedCount>()
-                val batchSize = placesSnapshot.size()
-
-                for (document in placesSnapshot.documents) {
-                    val placeId = document.id
-                    val placeName = document.getString("place") ?: ""
-                    val category = document.getString("category") ?: ""
-
-                    // Fetch visited count for each place
-                    firestore.collection("Visited").document(placeId)
-                        .get()
-                        .addOnSuccessListener { visitedSnapshot ->
-                            val visitedCount = visitedSnapshot.data?.keys?.size ?: 0
-
-                            // Add the place with visited count to the list
-                            val placeWithVisitedCount = PlaceWithVisitedCount(
-                                placeId = placeId,
-                                placeName = placeName,
-                                category = category,
-                                visitedCount = visitedCount
-                            )
-                            placesList.add(placeWithVisitedCount)
-
-                            // Once all places are fetched, post the result to LiveData
-                            if (placesList.size == batchSize) {
-                                _placesWithVisitedCount.postValue(placesList.sortedByDescending { it.visitedCount })
-                            }
-                        }
-                        .addOnFailureListener { exception ->
-                            Log.e(TAG, "Error fetching visited count: ${exception.localizedMessage}")
-                        }
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.e(TAG, "Error fetching places: ${exception.localizedMessage}")
-            }
-    }
-
-
-//    fun fetchVisitedCount(placesId: String) {
-//        firestore.collection("Visited").document(placesId)
-//            .addSnapshotListener { documentSnapshot, error ->
-//                if (error != null) {
-//                    Log.e(TAG, "Error fetching visited count: ${error.localizedMessage}")
-//                    return@addSnapshotListener
-//                }
-//
-//                if (documentSnapshot != null && documentSnapshot.exists()) {
-//                    val visitedUsers = documentSnapshot.data?.keys?.size ?: 0
-//                    if (visitedUsers>=3){
-//                    _visitedCount.postValue(visitedUsers)}
-//                } else {
-//                    _visitedCount.postValue(0)
-//                }
-//            }
-//    }
-
+    }*/
     fun fetchCategories() {
         _categories.postValue(Resource.Loading)
         firestore.collection("Places")
@@ -155,8 +113,6 @@ class DiscoverActivitiesViewModel() : ViewModel() {
                 _categories.postValue(Resource.Error(exception))
             }
     }
-
-
     fun fetchInformation() {
         _userInformation.postValue(Resource.Loading)
         firestore.collection(ConstValues.USERS)
@@ -179,53 +135,6 @@ class DiscoverActivitiesViewModel() : ViewModel() {
             }
     }
 
-
-//    fun fetchCategoriesAndAddChips(chipGroup: ChipGroup) {
-//        _categories.postValue(Resource.Loading)
-//        firestore.collection("Places")
-//            .get()
-//            .addOnSuccessListener { documents ->
-//                uniqueCategories.clear()
-//                chipGroup.removeAllViews()
-//                for (document in documents) {
-//                    val category = document.getString("category")
-//                    if (category != null) {
-//                        if (uniqueCategories.add(category.trim())) {
-//                            addChipToGroup(chipGroup, category.trim())
-//                            Log.d("TAG", "Added new category: $category")
-//                        }
-//                    }
-//                }
-//                _categories.postValue(Resource.Success(uniqueCategories.toList()))
-//                Log.d("TAG", "Categories fetched successfully: ${uniqueCategories.toList()}")
-//            }
-//            .addOnFailureListener { exception ->
-//                _categories.postValue(Resource.Error(exception))
-//            }
-//    }
-//
-//
-//    private fun addChipToGroup(chipGroup: ChipGroup, category: String) {
-//        val chip = Chip(chipGroup.context)
-//        chip.text = category
-//        chip.isCheckable = true
-//        val chipBorderColor = ContextCompat.getColor(chipGroup.context, R.color.blue)
-//        val chipBackgroundColor = ContextCompat.getColor(chipGroup.context, R.color.blue)
-//        chip.chipStrokeColor = ColorStateList.valueOf(chipBorderColor)
-//
-//        val states = arrayOf(
-//            intArrayOf(android.R.attr.state_checked),
-//            intArrayOf()
-//        )
-//        val colors = intArrayOf(
-//            chipBackgroundColor,
-//            Color.TRANSPARENT
-//        )
-//        val colorStateList = ColorStateList(states, colors)
-//
-//        chip.chipBackgroundColor = colorStateList
-//        chipGroup.addView(chip)
-//    }
 fun fetchCategoriesAndAddChips(chipGroup: ChipGroup) {
     _categories.postValue(Resource.Loading)
     firestore.collection("Places")
@@ -255,15 +164,6 @@ fun fetchCategoriesAndAddChips(chipGroup: ChipGroup) {
             setChipIconByCategory(context, this, category)
             setupChipStyle(context, this)
         }
-//        chip.setOnCheckedChangeListener { _, isChecked ->
-//            if (isChecked) {
-//                selectedCategory = category
-//                selectedCategories.add(category)
-//                fetchPlacesByCategories()
-//            } else {
-//                selectedCategories.remove(category)
-//            }
-//        }
         chipGroup.addView(chip)
     }
 

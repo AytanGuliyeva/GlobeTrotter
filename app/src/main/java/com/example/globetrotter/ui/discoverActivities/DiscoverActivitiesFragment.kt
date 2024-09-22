@@ -50,13 +50,14 @@ class DiscoverActivitiesFragment : Fragment() {
         auth = Firebase.auth
         firestore = Firebase.firestore
         setupRecyclerView()
-        viewModel.fetchPlaces()
+        viewModel.fetchPopularPlaces()
         viewModel.fetchCategories()
         viewModel.places.observe(viewLifecycleOwner) { placesResource ->
             when (placesResource) {
                 is Resource.Success -> {
+                    binding.progressBar.visibility = View.GONE
                     categoryAdapter.categoryPlaces.clear()
-                    categoryAdapter.categoryPlaces.addAll(placesResource.data ?: emptyList())
+                    categoryAdapter.categoryPlaces.addAll(placesResource.data)
                     categoryAdapter.notifyDataSetChanged()
                 }
 
@@ -68,26 +69,21 @@ class DiscoverActivitiesFragment : Fragment() {
                     ).show()
                 }
 
-                is Resource.Loading -> {}
+                is Resource.Loading -> {
+
+                    binding.progressBar.visibility = View.VISIBLE
+                }
             }
         }
-
         viewModel.categories.observe(viewLifecycleOwner) { categoriesResource ->
             when (categoriesResource) {
                 is Resource.Success -> {
                     categoryAdapter.submitList(categoriesResource.data)
+
                 }
 
-                is Resource.Error -> {
-                    Toast.makeText(
-                        requireContext(),
-                        "Kategoriler alınamadı: ${categoriesResource.exception}",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-
-                is Resource.Loading -> {
-                }
+                is Resource.Error -> {}
+                is Resource.Loading -> {}
             }
         }
         initNavigationListeners()
@@ -98,14 +94,13 @@ class DiscoverActivitiesFragment : Fragment() {
 
     }
 
+
     private fun setupRecyclerView() {
         categoryAdapter = CategoryAdapter({ place ->
             placesDetail(place.placesId)
         }, mutableListOf())
         binding.rvCategory.layoutManager = LinearLayoutManager(requireContext())
         binding.rvCategory.adapter = categoryAdapter
-
-
     }
 
     private fun placesDetail(placesId: String) {

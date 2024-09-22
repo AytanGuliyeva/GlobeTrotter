@@ -52,7 +52,6 @@ class SearchFragment : Fragment() {
         observeCategories()
 
         viewModel.fetchPlaces()
-        //oncreate true false
         viewModel.fetchCategoriesAndAddChips(binding.chipGroup)
 
         setupChipGroupListener()
@@ -118,6 +117,7 @@ class SearchFragment : Fragment() {
         viewModel.placesResult.observe(viewLifecycleOwner) { resource ->
             when (resource) {
                 is Resource.Success -> {
+                    binding.progressBar.visibility=View.GONE
                     setupSwipeRefreshLayout(resource.data)
                     val filteredPlaces = if (selectedCategories.isEmpty()) {
                         resource.data
@@ -128,7 +128,6 @@ class SearchFragment : Fragment() {
                     }
                     placesAdapter.submitList(filteredPlaces)
 
-                    showLoading(false)
                 }
 
                 is Resource.Error -> {
@@ -138,12 +137,12 @@ class SearchFragment : Fragment() {
                         "Failed to fetch places: ${resource.exception.message}",
                         Toast.LENGTH_SHORT
                     ).show()
-                    showLoading(false)
                 }
 
                 is Resource.Loading -> {
+                    binding.progressBar.visibility=View.VISIBLE
+
                     Log.d("SearchFragment", "Loading places...")
-                    showLoading(true)
                 }
             }
         }
@@ -158,6 +157,7 @@ class SearchFragment : Fragment() {
         viewModel.categories.observe(viewLifecycleOwner) { categoriesResource ->
             when (categoriesResource) {
                 is Resource.Success -> {
+                    binding.progressBar.visibility=View.GONE
                     Log.d(
                         "SearchFragment",
                         "Categories fetched successfully: ${categoriesResource.data}"
@@ -173,6 +173,8 @@ class SearchFragment : Fragment() {
                 }
 
                 is Resource.Loading -> {
+                    binding.progressBar.visibility=View.VISIBLE
+
                     Log.d("SearchFragment", "Loading categories...")
                 }
             }
@@ -180,8 +182,5 @@ class SearchFragment : Fragment() {
     }
 
 
-    private fun showLoading(isLoading: Boolean) {
-        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-        binding.rvPost.visibility = if (isLoading) View.GONE else View.VISIBLE
-    }
+
 }

@@ -12,7 +12,8 @@ import com.example.globetrotter.ui.search.adapter.PlacesImageAdapter
 
 class TopPlacesAdapter(
     var itemClick: (item: Places)->Unit,
-    private val categoryPlaces:MutableList<Places>
+    private val categoryPlaces:MutableList<Places>,
+
 ) : RecyclerView.Adapter<TopPlacesAdapter.TopPlacesViewHolder>() {
 
     private val diffUtilCallBack = object : DiffUtil.ItemCallback<Places>() {
@@ -49,13 +50,12 @@ class TopPlacesAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Places) {
 
+
             binding.placeName.text=item.place
             val imageAdapter = PlacesImageAdapter(item.placeImageUrls) {
                 itemClick(item)
             }
             binding.viewPager.adapter = imageAdapter
-            val dotsIndicator = binding.dotsIndicator
-            dotsIndicator.setViewPager2(binding.viewPager)
 
             val shortenedText = if (item.place.length > 8) {
                 item.place.substring(0, 8) + "..."
