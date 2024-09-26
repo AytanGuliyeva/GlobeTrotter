@@ -139,9 +139,12 @@ class PlacesDetailFragment : Fragment() {
             val btnNo: TextView = dialog.findViewById(R.id.btnNo)
 
             btnYes.setOnClickListener {
-//                if (!viewModel.isVisited.value!!) {
+               // if (!viewModel.isVisited.value!!) {
                     val bottomSheet = AddYourTravelFragment.newInstance(places.placesId)
                     bottomSheet.show(childFragmentManager, bottomSheet.tag)
+
+//                val action=PlacesDetailFragmentDirections.actionPlacesDetailFragmentToAddYourTravelFragment()
+//                findNavController().navigate(action)
                     viewModel.visitedClickListener(places.placesId)
                     viewModel.toggleVisitedStatus(places.placesId, binding.buttonVisited)
              //   }

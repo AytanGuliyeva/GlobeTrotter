@@ -81,7 +81,7 @@ class DiscoverActivitiesViewModel() : ViewModel() {
             }
     }
 
-   /* fun fetchPlaces() {
+  /*  fun fetchPlaces() {
         _places.value = Resource.Loading
         firestore.collection("Places")
             .get()

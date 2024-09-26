@@ -109,7 +109,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/view"
         app:spanCount="1"
-        tools:listitem="@layout/add_story" />
+        tools:listitem="@layout/item_add_story" />
 
     <View
         android:id="@+id/view2"

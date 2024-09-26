@@ -1,18 +1,18 @@
-package com.example.globetrotter.ui.discoverActivities.story
+package com.example.globetrotter.ui.discoverActivities.story.adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.globetrotter.data.Story
-import com.example.globetrotter.databinding.AddStoryBinding
+import com.example.globetrotter.databinding.ItemAddStoryBinding
 
 class StoryAdapter(private var storyList: List<Story>) : RecyclerView.Adapter<StoryAdapter.StoryViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StoryViewHolder {
         val binding =
-            AddStoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemAddStoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return StoryViewHolder(binding)
     }
 
@@ -23,7 +23,7 @@ class StoryAdapter(private var storyList: List<Story>) : RecyclerView.Adapter<St
     override fun onBindViewHolder(holder: StoryViewHolder, position: Int) {
        holder.bind(storyList[position],position)
     }
-    inner class StoryViewHolder(private val binding: AddStoryBinding) :
+    inner class StoryViewHolder(private val binding: ItemAddStoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(story: Story,position: Int){
 

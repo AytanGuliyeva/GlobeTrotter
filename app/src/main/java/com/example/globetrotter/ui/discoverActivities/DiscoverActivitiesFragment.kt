@@ -1,27 +1,20 @@
 package com.example.globetrotter.ui.discoverActivities
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.bumptech.glide.Glide
 import com.example.globetrotter.R
 import com.example.globetrotter.base.Resource
-import com.example.globetrotter.data.PlaceWithVisitedCount
 import com.example.globetrotter.databinding.FragmentDiscoverActivitiesBinding
 import com.example.globetrotter.ui.discoverActivities.adapter.CategoryAdapter
 import com.example.globetrotter.ui.discoverActivities.adapter.TopPlacesAdapter
-import com.example.globetrotter.ui.discoverActivities.story.StoryAdapter
-import com.example.globetrotter.ui.search.SearchFragmentDirections
-import com.example.globetrotter.ui.search.adapter.PlacesAdapter
+import com.example.globetrotter.ui.discoverActivities.story.adapter.StoryAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -60,7 +53,6 @@ class DiscoverActivitiesFragment : Fragment() {
                     categoryAdapter.categoryPlaces.addAll(placesResource.data)
                     categoryAdapter.notifyDataSetChanged()
                 }
-
                 is Resource.Error -> {
                     Toast.makeText(
                         requireContext(),
@@ -116,6 +108,4 @@ class DiscoverActivitiesFragment : Fragment() {
             findNavController().navigate(R.id.action_discoverActivitiesFragment_to_addPlacesFragment)
         }
     }
-
-
 }

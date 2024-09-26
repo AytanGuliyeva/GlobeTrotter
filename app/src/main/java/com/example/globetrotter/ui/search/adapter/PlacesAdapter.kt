@@ -6,10 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.example.globetrotter.R
 import com.example.globetrotter.data.Places
-import com.example.globetrotter.databinding.SearchPostItemBinding
-import com.google.android.material.tabs.TabLayoutMediator
+import com.example.globetrotter.databinding.ItemSearchPostBinding
 
 class PlacesAdapter(private var itemClick: (item: Places) -> Unit) :
     RecyclerView.Adapter<PlacesAdapter.PlacesViewHolder>() {
@@ -32,7 +30,7 @@ class PlacesAdapter(private var itemClick: (item: Places) -> Unit) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlacesViewHolder {
         val binding =
-            SearchPostItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemSearchPostBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return PlacesViewHolder(binding)
     }
 
@@ -44,7 +42,7 @@ class PlacesAdapter(private var itemClick: (item: Places) -> Unit) :
         holder.bind(differ.currentList[position])
     }
 
-    inner class PlacesViewHolder(private val binding: SearchPostItemBinding) :
+    inner class PlacesViewHolder(private val binding: ItemSearchPostBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Places) {

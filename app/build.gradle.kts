@@ -77,6 +77,10 @@ dependencies {
     //Swiperefreshlayout
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 
+    //story progress bar
+   // implementation ("com.github.shts:StoriesProgressView:3.0.0")
+
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
