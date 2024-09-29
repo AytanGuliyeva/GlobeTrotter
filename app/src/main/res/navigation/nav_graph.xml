@@ -145,6 +145,16 @@
           app:popUpTo="@id/addYourTravelFragment"
           app:popUpToInclusive="true" />
    </fragment>
+   <fragment
+       android:id="@+id/storyFragment"
+       android:name="com.example.globetrotter.StoryFragment"
+       android:label="fragment_story"
+       tools:layout="@layout/fragment_story" />
+   <fragment
+       android:id="@+id/peopleVisitsFragment"
+       android:name="com.example.globetrotter.ui.placesDetail.peopleVisits.PeopleVisitsFragment"
+       android:label="fragment_people_visits"
+       tools:layout="@layout/fragment_people_visits" />
 </navigation>
 
 

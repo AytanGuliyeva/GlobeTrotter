@@ -117,6 +117,7 @@
         app:layout_constraintTop_toBottomOf="@id/dotsIndicator">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constPeople"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -130,7 +131,9 @@
                 android:background="@drawable/circle_back"
                 android:contentDescription="Profile 1"
                 android:scaleType="centerCrop"
+                android:padding="5dp"
                 android:src="@drawable/icon_favourites"
+                android:visibility="gone"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"/>
@@ -140,18 +143,20 @@
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:layout_marginStart="-10dp"
+                android:padding="5dp"
                 android:background="@drawable/circle_back"
                 android:contentDescription="Profile 2"
                 android:scaleType="centerCrop"
-                android:src="@drawable/icon_flight"
+                android:visibility="gone"
                 app:layout_constraintStart_toEndOf="@id/profileImage1"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
             <TextView
                 android:id="@+id/remainingUsers"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:visibility="gone"
                 android:layout_marginStart="-10dp"
                 android:background="@drawable/circle_back"
                 android:gravity="center"
@@ -168,14 +173,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="8dp"
-                android:text="Connect with people going"
+                tools:text="Connect with people going"
                 android:textColor="@color/black"
                 app:layout_constraintEnd_toStartOf="@id/infoButton"
                 app:layout_constraintStart_toEndOf="@id/remainingUsers"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/infoButton"
                 android:layout_width="36dp"
                 android:layout_height="36dp"

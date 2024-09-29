@@ -97,29 +97,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textDiscover" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvStory"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:contentDescription="Story"
-        android:orientation="horizontal"
-        android:scrollbars="none"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view"
-        app:spanCount="1"
-        tools:listitem="@layout/item_add_story" />
-
-    <View
-        android:id="@+id/view2"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/grey2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rvStory" />
 
     <TextView
         android:id="@+id/textTopPlaces"
@@ -133,7 +110,7 @@
         android:textSize="23sp"
         app:drawableEndCompat="@drawable/icon_flight"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view2" />
+        app:layout_constraintTop_toBottomOf="@id/view" />
     <View
         android:id="@+id/view3"
         android:layout_width="match_parent"

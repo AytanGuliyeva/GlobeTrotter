@@ -97,7 +97,6 @@ class AddYourTravelFragment : BottomSheetDialogFragment() {
         val imageReference = storage.reference.child("story/$imageName")
 
         selectPicture?.let {
-            // First, upload the story image
             imageReference.putFile(it).addOnSuccessListener {
                 imageReference.downloadUrl.addOnSuccessListener { imgUrl ->
                     val downloadUrl = imgUrl.toString()
@@ -106,7 +105,6 @@ class AddYourTravelFragment : BottomSheetDialogFragment() {
                     val ref = firestore.collection("Story").document(myId)
                     val timeEnd = System.currentTimeMillis() + 86400000
 
-                    // Story data
                     val hmapkey = hashMapOf<String, Any>()
                     val hmap = hashMapOf<String, Any>(
                         ConstValues.IMAGE_URL to downloadUrl,
@@ -118,12 +116,11 @@ class AddYourTravelFragment : BottomSheetDialogFragment() {
                     hmapkey[randomKey] = hmap
 
                     ref.set(hmapkey, SetOptions.merge()).addOnSuccessListener {
-                        // After story upload, add the overview (caption)
                         addOverviewToPlace(placesId, binding.edtCaption.text.toString(), myId)
                         progress.dismiss()
                         Toast.makeText(
                             requireContext(),
-                            "Post successfully shared!",
+                            "Overview  successfully shared!",
                             Toast.LENGTH_SHORT
                         ).show()
                         findNavController().popBackStack()
@@ -145,63 +142,6 @@ class AddYourTravelFragment : BottomSheetDialogFragment() {
             Toast.makeText(requireContext(), "Please select a photo", Toast.LENGTH_SHORT).show()
         }
     }
-
-    //story
-    fun uploadStory() {
-        val progress = ProgressDialog(requireActivity())
-        progress.setMessage("Please wait while adding the post!")
-        progress.show()
-
-        val uuid = UUID.randomUUID()
-        val imageName = "$uuid.jpg"
-        val imageReference = storage.reference.child("story/$imageName")
-
-        selectPicture?.let {
-            imageReference.putFile(it).addOnSuccessListener {
-                imageReference.downloadUrl.addOnSuccessListener { imgUrl ->
-                    val downloadUrl = imgUrl.toString()
-                    val randomKey = UUID.randomUUID().toString()
-                    val myId = auth.currentUser!!.uid
-                    val ref = firestore.collection("Story").document(myId)
-                    val timeEnd = System.currentTimeMillis() + 86400000
-
-                    val hmapkey = hashMapOf<String, Any>()
-                    val hmap = hashMapOf<String, Any>(
-                        ConstValues.IMAGE_URL to downloadUrl,
-                        "timeStart" to System.currentTimeMillis(),
-                        "timeEnd" to timeEnd,
-                        "storyId" to randomKey,
-                        ConstValues.USER_ID to myId
-                    )
-                    hmapkey[randomKey] = hmap
-
-                    ref.set(hmapkey, SetOptions.merge()).addOnSuccessListener {
-                        progress.dismiss()
-                        Toast.makeText(
-                            requireContext(),
-                            "Story successfully shared...",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        findNavController().popBackStack()
-                    }.addOnFailureListener { error ->
-                        progress.dismiss()
-                        Toast.makeText(
-                            requireContext(),
-                            "Story not shared: ${error.localizedMessage}",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }.addOnFailureListener {
-                    progress.dismiss()
-                    Toast.makeText(requireContext(), it.localizedMessage, Toast.LENGTH_SHORT).show()
-                }
-            }
-        } ?: run {
-            progress.dismiss()
-            Toast.makeText(requireContext(), "Please select a photo", Toast.LENGTH_SHORT).show()
-        }
-    }
-
     private fun selectImage(view: View) {
         if (ContextCompat.checkSelfPermission(
                 requireActivity(),
@@ -279,26 +219,9 @@ class AddYourTravelFragment : BottomSheetDialogFragment() {
             }
     }
 
-
-    fun sendOverview() {
-        val overview = binding.edtCaption
-        if (overview.text.trim().toString() == "") {
-            Toast.makeText(
-                requireContext(),
-                "Please add the overview", Toast.LENGTH_SHORT
-            ).show()
-            overview.text.clear()
-        } else {
-            addOverviewToPlace(placesId, overview.text.toString(), auth.currentUser!!.uid)
-            overview.text.clear()
-            dismiss()
-        }
-    }
-
     fun buttonPost() {
         binding.buttonAdd.setOnClickListener {
             if (selectPicture != null && !binding.edtCaption.text.isNullOrEmpty()) {
-                // Upload the story image and add caption simultaneously
                 uploadStoryAndOverview()
             } else {
                 Toast.makeText(

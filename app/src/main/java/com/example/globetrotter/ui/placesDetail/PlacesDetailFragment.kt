@@ -56,13 +56,12 @@ class PlacesDetailFragment : Fragment() {
             Log.d(TAG, "Category: , Drawable: $drawableRes")
             binding.illusImage.setImageResource(drawableRes)
         }
-
-
         observeVisitersCount()
         viewModel.placesResult.observe(viewLifecycleOwner) { placesResource ->
             when (placesResource) {
                 is Resource.Success -> {
                     viewModel.fetchVisitedCount(placesResource.data.placesId)
+
                     viewModel.checkVisitStatus(placesResource.data.placesId, binding.buttonVisited)
 
                     updatePostUI(placesResource.data)
@@ -83,20 +82,44 @@ class PlacesDetailFragment : Fragment() {
             }
         }
         viewModel.fetchPlaces(args.placesId)
+        viewModel.fetchPeopleVisits(args.placesId)
+        viewModel.visitedUserProfileImages.observe(viewLifecycleOwner) { profileImages ->
+            Log.e("TAGimage", "onViewCreated: $profileImages", )
+            for ((index, imageUrl) in profileImages.withIndex()) {
+                when (index) {
+                    0 -> Glide.with(requireContext()).load(imageUrl).into(binding.profileImage1)
+                    1 -> Glide.with(requireContext()).load(imageUrl).into(binding.profileImage2)
+                }
+            }
+        }
+
 
     }
 
     private fun observeVisitersCount() {
         viewModel.visitedCount.observe(viewLifecycleOwner) { visitersCount ->
-            if (visitersCount <= 1) {
-                binding.textVisitedCount.text = "$visitersCount visiter"
+            binding.connectText.text = if (visitersCount == 0) {
+                "Anyone didn't visit..."
             } else {
-                binding.textVisitedCount.text = "$visitersCount visiters"
+                "Connect with people going"
+            }
+
+            binding.profileImage1.visibility = if (visitersCount >= 1) View.VISIBLE else View.GONE
+            binding.profileImage2.visibility = if (visitersCount >= 2) View.VISIBLE else View.GONE
+            binding.remainingUsers.visibility = if (visitersCount > 2) View.VISIBLE else View.GONE
+
+            binding.textVisitedCount.text = "$visitersCount visiter${if (visitersCount > 1) "s" else ""}"
+
+            if (visitersCount > 2) {
+                binding.remainingUsers.text = "+${visitersCount - 2}"
+            } else {
+                binding.remainingUsers.text = ""
             }
         }
     }
 
     private fun updatePostUI(places: Places) {
+
         viewModel.checkFavStatus(places.placesId, binding.buttonFav)
         viewModel.checkVisitStatus(places.placesId, binding.buttonVisited)
         binding.buttonFav.setOnClickListener {

@@ -41,6 +41,10 @@ class PlacesDetailViewModel : ViewModel() {
     val loading: LiveData<Boolean>
         get() = _loading
 
+    private val _visitedUserProfileImages = MutableLiveData<List<String>>()
+    val visitedUserProfileImages: LiveData<List<String>>
+        get() = _visitedUserProfileImages
+
 
     // Fetch places
     fun fetchPlaces(placesId: String) {
@@ -98,6 +102,42 @@ class PlacesDetailViewModel : ViewModel() {
             }
     }
 
+    //fetch people visits
+    fun fetchPeopleVisits(placesId: String) {
+        firestore.collection("Visited").document(placesId)
+            .addSnapshotListener { documentSnapshot, error ->
+                if (error != null) {
+                    Log.e(TAG, "Error fetching visited users: ${error.localizedMessage}")
+                    return@addSnapshotListener
+                }
+
+                if (documentSnapshot != null && documentSnapshot.exists()) {
+                    val users = documentSnapshot.data?.keys ?: emptySet()
+                    val profileImageUrls = mutableListOf<String>()
+
+                    for (userId in users) {
+                        firestore.collection("Users").document(userId)
+                            .get()
+                            .addOnSuccessListener { userDocument ->
+                                if (userDocument.exists()) {
+                                    val profileImageUrl = userDocument.getString("imageUrl")
+                                    val imageUrl = profileImageUrl ?: "default_profile_image_url"
+                                    profileImageUrls.add(imageUrl)
+                                    if (profileImageUrls.size == users.size) {
+                                        _visitedUserProfileImages.postValue(profileImageUrls)
+                                    }
+                                }
+                            }
+                            .addOnFailureListener { e ->
+                                Log.e(TAG, "Error fetching user profile: ${e.localizedMessage}")
+                            }
+                    }
+                }
+            }
+    }
+
+
+
     // Visited click listener
     fun visitedClickListener(placesId: String) {
         val currentUserUid = auth.currentUser!!.uid
@@ -124,7 +164,7 @@ class PlacesDetailViewModel : ViewModel() {
         }
     }
 
-//
+    //
     // Like
     fun toggleLikeStatus(placesId: String, imageView: ImageView) {
         val tag = imageView.tag?.toString() ?: ""
