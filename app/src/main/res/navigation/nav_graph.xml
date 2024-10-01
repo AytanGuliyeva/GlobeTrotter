@@ -122,6 +122,9 @@
           app:destination="@id/discoverActivitiesFragment"
           app:popUpTo="@id/placesDetailFragment"
           app:popUpToInclusive="true" />
+      <action
+          android:id="@+id/action_placesDetailFragment_to_peopleVisitsFragment"
+          app:destination="@id/peopleVisitsFragment" />
    </fragment>
     <fragment
         android:id="@+id/editProfileFragment"
@@ -154,7 +157,16 @@
        android:id="@+id/peopleVisitsFragment"
        android:name="com.example.globetrotter.ui.placesDetail.peopleVisits.PeopleVisitsFragment"
        android:label="fragment_people_visits"
-       tools:layout="@layout/fragment_people_visits" />
+       tools:layout="@layout/fragment_people_visits" >
+      <action
+          android:id="@+id/action_peopleVisitsFragment_to_placesDetailFragment"
+          app:destination="@id/placesDetailFragment"
+          app:popUpTo="@id/peopleVisitsFragment"
+          app:popUpToInclusive="true" />
+      <argument
+          android:name="placesId"
+          app:argType="string" />
+   </fragment>
 </navigation>
 
 

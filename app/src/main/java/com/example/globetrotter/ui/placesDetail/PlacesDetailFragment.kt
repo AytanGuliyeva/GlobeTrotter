@@ -67,8 +67,6 @@ class PlacesDetailFragment : Fragment() {
                     updatePostUI(placesResource.data)
                     initListener(placesResource.data)
 
-                    Log.e("TAG3", "onViewCreated: ${placesResource.data}")
-
                     // binding.progressBar.visibility = View.GONE
                 }
 
@@ -84,7 +82,7 @@ class PlacesDetailFragment : Fragment() {
         viewModel.fetchPlaces(args.placesId)
         viewModel.fetchPeopleVisits(args.placesId)
         viewModel.visitedUserProfileImages.observe(viewLifecycleOwner) { profileImages ->
-            Log.e("TAGimage", "onViewCreated: $profileImages", )
+            Log.e("TAGimage", "onViewCreated: $profileImages")
             for ((index, imageUrl) in profileImages.withIndex()) {
                 when (index) {
                     0 -> Glide.with(requireContext()).load(imageUrl).into(binding.profileImage1)
@@ -108,7 +106,8 @@ class PlacesDetailFragment : Fragment() {
             binding.profileImage2.visibility = if (visitersCount >= 2) View.VISIBLE else View.GONE
             binding.remainingUsers.visibility = if (visitersCount > 2) View.VISIBLE else View.GONE
 
-            binding.textVisitedCount.text = "$visitersCount visiter${if (visitersCount > 1) "s" else ""}"
+            binding.textVisitedCount.text =
+                "$visitersCount visiter${if (visitersCount > 1) "s" else ""}"
 
             if (visitersCount > 2) {
                 binding.remainingUsers.text = "+${visitersCount - 2}"
@@ -147,6 +146,10 @@ class PlacesDetailFragment : Fragment() {
     }
 
     private fun initListener(places: Places) {
+        binding.infoButton.setOnClickListener {
+            val action = PlacesDetailFragmentDirections.actionPlacesDetailFragmentToPeopleVisitsFragment(args.placesId)
+            findNavController().navigate(action)
+        }
         binding.buttonBack.setOnClickListener {
             findNavController().popBackStack()
         }
@@ -162,23 +165,19 @@ class PlacesDetailFragment : Fragment() {
             val btnNo: TextView = dialog.findViewById(R.id.btnNo)
 
             btnYes.setOnClickListener {
-               // if (!viewModel.isVisited.value!!) {
-                    val bottomSheet = AddYourTravelFragment.newInstance(places.placesId)
-                    bottomSheet.show(childFragmentManager, bottomSheet.tag)
+                val bottomSheet = AddYourTravelFragment.newInstance(places.placesId)
+                bottomSheet.show(childFragmentManager, bottomSheet.tag)
 
-//                val action=PlacesDetailFragmentDirections.actionPlacesDetailFragmentToAddYourTravelFragment()
-//                findNavController().navigate(action)
-                    viewModel.visitedClickListener(places.placesId)
-                    viewModel.toggleVisitedStatus(places.placesId, binding.buttonVisited)
-             //   }
+                viewModel.visitedClickListener(places.placesId)
+                viewModel.toggleVisitedStatus(places.placesId, binding.buttonVisited)
                 dialog.dismiss()
             }
 
             btnNo.setOnClickListener {
-            //    if (viewModel.isVisited.value!!) {
-                    viewModel.toggleVisitedStatus(places.placesId, binding.buttonVisited)
-                    Toast.makeText(requireContext(), "Visit removed", Toast.LENGTH_SHORT).show()
-               // }
+                //    if (viewModel.isVisited.value!!) {
+                viewModel.toggleVisitedStatus(places.placesId, binding.buttonVisited)
+                Toast.makeText(requireContext(), "Visit removed", Toast.LENGTH_SHORT).show()
+                // }
                 dialog.dismiss()
             }
 
