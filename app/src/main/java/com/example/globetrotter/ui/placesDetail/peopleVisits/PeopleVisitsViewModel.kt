@@ -31,9 +31,7 @@ class PeopleVisitsViewModel : ViewModel() {
                 try {
                     val peoples = documentSnapshot.data
                     if (peoples != null) {
-                        // Kullanıcı ID'lerini al
                         val userIds = peoples.keys.toList()
-                        // Kullanıcı detaylarını çek
                         fetchUserDetails(userIds)
                     } else {
                         _peopleList.value = Resource.Error(Exception("No visited users found"))
@@ -49,14 +47,13 @@ class PeopleVisitsViewModel : ViewModel() {
 
     private fun fetchUserDetails(userIds: List<String>) {
         val userDetails = mutableListOf<Users>()
-        val userFetchTasks = mutableListOf<com.google.android.gms.tasks.Task<DocumentSnapshot>>() // Kullanıcı çekme görevleri
+        val userFetchTasks = mutableListOf<com.google.android.gms.tasks.Task<DocumentSnapshot>>()
 
         for (userId in userIds) {
             val userTask = firestore.collection("Users").document(userId).get()
             userFetchTasks.add(userTask)
         }
 
-        // Tüm görevlerin tamamlanmasını bekle
         Tasks.whenAllSuccess<DocumentSnapshot>(userFetchTasks).addOnSuccessListener {
             for (task in userFetchTasks) {
                 val document = task.result

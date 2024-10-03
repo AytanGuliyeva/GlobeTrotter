@@ -36,10 +36,8 @@ class PeopleVisitsFragment : Fragment() {
         initListener()
         setupRecyclerView()
 
-        // Ziyaret edilen kişilerin verilerini al
         viewModel.fetchVisitedPeople(args.placesId)
 
-        // ViewModel'den kullanıcıları gözlemle
         viewModel.peopleList.observe(viewLifecycleOwner, Observer { resource ->
             when (resource) {
                 is Resource.Success -> {
@@ -49,8 +47,7 @@ class PeopleVisitsFragment : Fragment() {
                 }
 
                 is Resource.Loading -> {}
-                is Resource.Error -> {
-                }
+                is Resource.Error -> {}
             }
         })
     }
