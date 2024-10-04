@@ -8,6 +8,7 @@ import com.example.globetrotter.base.ConstValues
 import com.example.globetrotter.data.Users
 import com.example.globetrotter.base.Resource
 import com.example.globetrotter.data.Story
+import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
@@ -18,190 +19,90 @@ class PeopleVisitsViewModel : ViewModel() {
     private val firestore: FirebaseFirestore = Firebase.firestore
 
     private val _visitedUserProfileImages = MutableLiveData<List<String>>()
-    val visitedUserProfileImages: LiveData<List<String>>
-        get() = _visitedUserProfileImages
+    val visitedUserProfileImages: LiveData<List<String>> = _visitedUserProfileImages
 
-    /* private val _peopleList = MutableLiveData<Resource<List<Pair<Users, List<Story>>>>>()
-     val peopleList: LiveData<Resource<List<Pair<Users, List<Story>>>>>
-         get() = _peopleList
-    */
-    private val _peopleList = MutableLiveData<Resource<List<Users>>>()
-    val peopleList: LiveData<Resource<List<Users>>>
-        get() = _peopleList
+    private val _peopleList = MutableLiveData<Resource<List<Pair<Users, Boolean>>>>()
+    val peopleList: LiveData<Resource<List<Pair<Users, Boolean>>>> = _peopleList
 
     fun fetchVisitedPeople(placesId: String) {
         firestore.collection("Visited").document(placesId)
             .get()
             .addOnSuccessListener { documentSnapshot ->
-                try {
-                    val peoples = documentSnapshot.data
-                    if (peoples != null) {
-                        val userIds = peoples.keys.toList()
-                        fetchUserDetails(userIds)
-                    } else {
-                        _peopleList.value = Resource.Error(Exception("No visited users found"))
-                    }
-                } catch (e: Exception) {
-                    _peopleList.value = Resource.Error(e)
+                val peoples = documentSnapshot.data
+                if (peoples != null) {
+                    val userIds = peoples.keys.toList()
+                    fetchUserDetails(userIds)
+                } else {
+                    _peopleList.value = Resource.Error(Exception("No visited users found"))
                 }
             }
             .addOnFailureListener { exception ->
                 _peopleList.value = Resource.Error(exception)
             }
     }
-    /*
-        fun fetchVisitedPeople(placesId: String) {
-            firestore.collection("Visited").document(placesId)
-                .get()
-                .addOnSuccessListener { documentSnapshot ->
-                    try {
-                        val peoples = documentSnapshot.data
-                        if (peoples != null) {
-                            val userIds = peoples.keys.toList()
-                            fetchUserDetails(userIds)
-                        } else {
-                            _peopleList.value = Resource.Error(Exception("No visited users found"))
-                        }
-                    } catch (e: Exception) {
-                        _peopleList.value = Resource.Error(e)
-                    }
-                }
-                .addOnFailureListener { exception ->
-                    _peopleList.value = Resource.Error(exception)
-                }
-        }
-    */
 
-    /* private fun fetchUserDetails(userIds: List<String>) {
-         val userDetails = mutableListOf<Pair<Users, List<Story>>>()
-         val userFetchTasks = mutableListOf<com.google.android.gms.tasks.Task<DocumentSnapshot>>()
-
-         for (userId in userIds) {
-             val userTask = firestore.collection("Users").document(userId).get()
-             userFetchTasks.add(userTask)
-         }
-
-         Tasks.whenAllSuccess<DocumentSnapshot>(userFetchTasks).addOnSuccessListener {
-             for (task in userFetchTasks) {
-                 val document = task.result
-                 val user = document.toUser()
-                 val stories = fetchStoriesForUser(user?.userId)
-
-                 user?.let {
-                     userDetails.add(Pair(it, stories))
-                 }
-             }
-             _peopleList.value = Resource.Success(userDetails)
-         }.addOnFailureListener { exception ->
-             Log.e("PeopleVisitsViewModel", "Error getting user details: $exception")
-             _peopleList.value = Resource.Error(exception)
-         }
-     }*/
-//tekce user adlari
     private fun fetchUserDetails(userIds: List<String>) {
-        val userDetails = mutableListOf<Users>()
+        val userDetails = mutableListOf<Pair<Users, Boolean>>() // User and boolean pair list
         val userFetchTasks = mutableListOf<com.google.android.gms.tasks.Task<DocumentSnapshot>>()
 
-        for (userId in userIds) {
+        userIds.forEach { userId ->
             val userTask = firestore.collection("Users").document(userId).get()
             userFetchTasks.add(userTask)
         }
 
         Tasks.whenAllSuccess<DocumentSnapshot>(userFetchTasks).addOnSuccessListener {
-            for (task in userFetchTasks) {
+            val storyFetchTasks = mutableListOf<com.google.android.gms.tasks.Task<Boolean>>() // Store story tasks
+
+            userFetchTasks.forEach { task ->
                 val document = task.result
                 val user = document.toUser()
                 user?.let {
-                    userDetails.add(it)
+                    storyFetchTasks.add(fetchStoriesForUser(it.userId)) // Fetch story for each user
+                    userDetails.add(Pair(it, false)) // Initialize hasStory as false
                 }
             }
-            _peopleList.value = Resource.Success(userDetails)
+
+            // Wait for all story fetch tasks to complete
+            Tasks.whenAllSuccess<Boolean>(storyFetchTasks).addOnSuccessListener { storyResults ->
+                storyResults.forEachIndexed { index, hasStory ->
+                    userDetails[index] = Pair(userDetails[index].first, hasStory) // Update userDetails with story status
+                }
+                _peopleList.value = Resource.Success(userDetails)
+            }.addOnFailureListener { exception ->
+                Log.e("PeopleVisitsViewModel", "Error fetching stories: $exception")
+                _peopleList.value = Resource.Error(exception)
+            }
         }.addOnFailureListener { exception ->
             Log.e("PeopleVisitsViewModel", "Error getting user details: $exception")
             _peopleList.value = Resource.Error(exception)
         }
     }
 
-    private fun fetchStoriesForUser(userId: String?): List<Story> {
-        val stories = mutableListOf<Story>()
+    private fun fetchStoriesForUser(userId: String): Task<Boolean> {
+        val taskCompletionSource = com.google.android.gms.tasks.TaskCompletionSource<Boolean>()
+
         firestore.collection("Story")
             .whereEqualTo("userId", userId)
             .get()
             .addOnSuccessListener { querySnapshot ->
-                for (document in querySnapshot.documents) {
-                    val story = document.toStory()
-                    if (story != null) {
-                        stories.add(story)
-                    }
-                }
-            }
-        return stories
-    }
-
-    private fun DocumentSnapshot.toStory(): Story? {
-        return try {
-            val storyId = getString("storyId") ?: return null
-            val userId = getString("userId") ?: return null
-            val imageUrl = getString("imageUrl") ?: return null
-            val timeStart = getLong("timeStart") ?: 0
-            val timeEnd = getLong("timeEnd") ?: 0
-            val caption = getString("caption") ?: ""
-
-            Story(
-                storyId = storyId,
-                userId = userId,
-                imageUrl = imageUrl,
-                timeStart = timeStart,
-                timeEnd = timeEnd,
-                caption = caption
-            )
-        } catch (e: Exception) {
-            null
-        }
-    }
-
-
-    /*
-        private fun fetchUserDetails(userIds: List<String>) {
-            val userDetails = mutableListOf<Users>()
-            val userFetchTasks = mutableListOf<com.google.android.gms.tasks.Task<DocumentSnapshot>>()
-
-            for (userId in userIds) {
-                val userTask = firestore.collection("Users").document(userId).get()
-                userFetchTasks.add(userTask)
-            }
-
-            Tasks.whenAllSuccess<DocumentSnapshot>(userFetchTasks).addOnSuccessListener {
-                for (task in userFetchTasks) {
-                    val document = task.result
-                    val user = document.toUser()
-                    user?.let {
-                        userDetails.add(it)
-                    }
-                }
-                _peopleList.value = Resource.Success(userDetails)
+                val hasStory = querySnapshot.documents.isNotEmpty() // Set hasStory based on presence of documents
+                taskCompletionSource.setResult(hasStory)
             }.addOnFailureListener { exception ->
-                Log.e("PeopleVisitsViewModel", "Error getting user details: $exception")
-                _peopleList.value = Resource.Error(exception)
+                taskCompletionSource.setException(exception)
             }
-        }
-    */
+
+        return taskCompletionSource.task
+    }
 
     private fun DocumentSnapshot.toUser(): Users? {
         return try {
-            val userId = getString(ConstValues.USER_ID)
-            val username = getString(ConstValues.USERNAME)
-            val email = getString(ConstValues.EMAIL)
-            val password = getString(ConstValues.PASSWORD)
-            val imageUrl = getString(ConstValues.IMAGE_URL)
+            val userId = getString(ConstValues.USER_ID) ?: return null
+            val username = getString(ConstValues.USERNAME) ?: return null
+            val email = getString(ConstValues.EMAIL) ?: return null
+            val password = getString(ConstValues.PASSWORD) ?: return null
+            val imageUrl = getString(ConstValues.IMAGE_URL) ?: return null
 
-            Users(
-                userId.orEmpty(),
-                username.orEmpty(),
-                email.orEmpty(),
-                password.orEmpty(),
-                imageUrl.orEmpty(),
-            )
+            Users(userId, username, email, password, imageUrl)
         } catch (e: Exception) {
             null
         }
