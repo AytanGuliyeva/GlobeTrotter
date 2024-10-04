@@ -34,18 +34,32 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/imgProfile"
             tools:text="Caption"
+            android:visibility="gone"
+
             android:layout_margin="10dp"/>
         <ImageView
             android:layout_width="250dp"
             android:layout_height="200dp"
             android:id="@+id/imgStory"
             android:layout_margin="20dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textCaption"/>
 
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textVisited"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/imgProfile"
+            android:text="Visited"
+            android:layout_marginEnd="20dp"
+            android:textColor="@color/red"
+            app:layout_constraintBottom_toBottomOf="@id/imgProfile"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

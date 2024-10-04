@@ -1,17 +1,14 @@
 package com.example.globetrotter.ui.addYourTravel
 
 import android.app.ProgressDialog
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -20,17 +17,13 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.example.globetrotter.R
 import com.example.globetrotter.base.ConstValues
-import com.example.globetrotter.data.Places
 import com.example.globetrotter.databinding.FragmentAddYourTravelBinding
-import com.example.globetrotter.ui.discoverActivities.DiscoverActivitiesViewModel
 import com.example.globetrotter.ui.placesDetail.PlacesDetailViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
@@ -86,7 +79,7 @@ class AddYourTravelFragment : BottomSheetDialogFragment() {
         buttonPost()
         registerLauncher()
     }
-    fun uploadStoryAndOverview() {
+    private fun uploadStoryAndOverview() {
         val progress = ProgressDialog(requireActivity())
         progress.setMessage("Please wait while adding the post!")
         progress.show()
@@ -104,14 +97,13 @@ class AddYourTravelFragment : BottomSheetDialogFragment() {
                     val ref = firestore.collection("Story").document(myId)
                     val timeEnd = System.currentTimeMillis() + 86400000
 
-                    // Tüm veriyi Story içerisine ekliyoruz
                     val storyData = hashMapOf(
                         ConstValues.IMAGE_URL to downloadUrl,
                         "timeStart" to System.currentTimeMillis(),
                         "timeEnd" to timeEnd,
                         "storyId" to randomKey,
                         ConstValues.USER_ID to myId,
-                        "caption" to binding.edtCaption.text.toString()  // Caption ekliyoruz
+                        "caption" to binding.edtCaption.text.toString()
                     )
 
                     ref.set(storyData, SetOptions.merge()).addOnSuccessListener {
@@ -133,64 +125,6 @@ class AddYourTravelFragment : BottomSheetDialogFragment() {
         }
     }
 
-
-    /*
-    fun uploadStoryAndOverview() {
-        val progress = ProgressDialog(requireActivity())
-        progress.setMessage("Please wait while adding the post!")
-        progress.show()
-
-        val uuid = UUID.randomUUID()
-        val imageName = "$uuid.jpg"
-        val imageReference = storage.reference.child("story/$imageName")
-
-        selectPicture?.let {
-            imageReference.putFile(it).addOnSuccessListener {
-                imageReference.downloadUrl.addOnSuccessListener { imgUrl ->
-                    val downloadUrl = imgUrl.toString()
-                    val randomKey = UUID.randomUUID().toString()
-                    val myId = auth.currentUser!!.uid
-                    val ref = firestore.collection("Story").document(myId)
-                    val timeEnd = System.currentTimeMillis() + 86400000
-
-                    val hmapkey = hashMapOf<String, Any>()
-                    val hmap = hashMapOf<String, Any>(
-                        ConstValues.IMAGE_URL to downloadUrl,
-                        "timeStart" to System.currentTimeMillis(),
-                        "timeEnd" to timeEnd,
-                        "storyId" to randomKey,
-                        ConstValues.USER_ID to myId
-                    )
-                    hmapkey[randomKey] = hmap
-
-                    ref.set(hmapkey, SetOptions.merge()).addOnSuccessListener {
-                        addOverviewToPlace(placesId, binding.edtCaption.text.toString(), myId)
-                        progress.dismiss()
-                        Toast.makeText(
-                            requireContext(),
-                            "Overview  successfully shared!",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        findNavController().popBackStack()
-                    }.addOnFailureListener { error ->
-                        progress.dismiss()
-                        Toast.makeText(
-                            requireContext(),
-                            "Story not shared: ${error.localizedMessage}",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }.addOnFailureListener {
-                    progress.dismiss()
-                    Toast.makeText(requireContext(), it.localizedMessage, Toast.LENGTH_SHORT).show()
-                }
-            }
-        } ?: run {
-            progress.dismiss()
-            Toast.makeText(requireContext(), "Please select a photo", Toast.LENGTH_SHORT).show()
-        }
-    }
-*/
     private fun selectImage(view: View) {
         if (ContextCompat.checkSelfPermission(
                 requireActivity(),
@@ -240,32 +174,6 @@ class AddYourTravelFragment : BottomSheetDialogFragment() {
                 val intentToGallery =
                     Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                 activityResultLauncher.launch(intentToGallery)
-            }
-    }
-
-    //comment
-    fun addOverviewToPlace(placesId: String, overview: String, userId: String) {
-        val overviewId = UUID.randomUUID().toString()
-        val overviewRef = firestore.collection("Overviews").document(userId)
-
-        val overviewData = hashMapOf(
-            "overview" to overview,
-            "userId" to userId,
-            "placesId" to placesId,
-            "time" to com.google.firebase.Timestamp.now(),
-            "overviewId" to overviewId
-        )
-
-        overviewRef.set(mapOf("overview" to overviewData), SetOptions.merge())
-            .addOnSuccessListener {
-                context?.let { ctx ->
-                    Toast.makeText(ctx, "Overview added successfully!", Toast.LENGTH_SHORT).show()
-                }
-            }
-            .addOnFailureListener {
-                context?.let { ctx ->
-                    Toast.makeText(ctx, "Failed to add overview.", Toast.LENGTH_SHORT).show()
-                }
             }
     }
 
