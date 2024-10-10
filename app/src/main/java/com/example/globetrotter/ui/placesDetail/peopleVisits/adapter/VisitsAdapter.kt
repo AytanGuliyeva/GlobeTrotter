@@ -8,16 +8,26 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.globetrotter.data.Places
 import com.example.globetrotter.data.Users
 import com.example.globetrotter.databinding.ItemPeopleVisitsBinding
+import com.example.globetrotter.ui.placesDetail.peopleVisits.PeopleVisitsFragmentDirections
+import com.example.globetrotter.ui.placesDetail.peopleVisits.overView.OverViewFragmentDirections
 
-class VisitsAdapter : RecyclerView.Adapter<VisitsAdapter.VisitsViewHolder>() {
+class VisitsAdapter(private var itemClick: (item: Users) -> Unit) :
+    RecyclerView.Adapter<VisitsAdapter.VisitsViewHolder>() {
     private val diffUtilCallBack = object : DiffUtil.ItemCallback<Pair<Users, Boolean>>() {
-        override fun areItemsTheSame(oldItem: Pair<Users, Boolean>, newItem: Pair<Users, Boolean>): Boolean {
+        override fun areItemsTheSame(
+            oldItem: Pair<Users, Boolean>,
+            newItem: Pair<Users, Boolean>
+        ): Boolean {
             return oldItem.first.userId == newItem.first.userId
         }
 
-        override fun areContentsTheSame(oldItem: Pair<Users, Boolean>, newItem: Pair<Users, Boolean>): Boolean {
+        override fun areContentsTheSame(
+            oldItem: Pair<Users, Boolean>,
+            newItem: Pair<Users, Boolean>
+        ): Boolean {
             return oldItem == newItem
         }
     }
@@ -34,7 +44,8 @@ class VisitsAdapter : RecyclerView.Adapter<VisitsAdapter.VisitsViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VisitsViewHolder {
-        val binding = ItemPeopleVisitsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemPeopleVisitsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return VisitsViewHolder(binding)
     }
 
@@ -44,7 +55,8 @@ class VisitsAdapter : RecyclerView.Adapter<VisitsAdapter.VisitsViewHolder>() {
         holder.bind(diffUtil.currentList[position])
     }
 
-    inner class VisitsViewHolder(private val binding: ItemPeopleVisitsBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class VisitsViewHolder(private val binding: ItemPeopleVisitsBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Pair<Users, Boolean>) {
             val user = item.first
             Glide.with(binding.root)
@@ -53,6 +65,15 @@ class VisitsAdapter : RecyclerView.Adapter<VisitsAdapter.VisitsViewHolder>() {
             binding.txtUsername.text = user.username
             val hasStory = item.second
             binding.imgOverview.visibility = if (hasStory) View.VISIBLE else View.GONE
+
+//            binding.imgOverview.setOnClickListener {
+//                val navController = androidx.navigation.Navigation.findNavController(itemView)
+//                val action = PeopleVisitsFragmentDirections.actionPeopleVisitsFragmentToOverViewFragment()
+//                navController.navigate(action)
+//            }
+            itemView.setOnClickListener {
+                itemClick(user)
+            }
         }
     }
 }

@@ -139,7 +139,7 @@
     </fragment>
    <fragment
        android:id="@+id/addYourTravelFragment"
-       android:name="com.example.globetrotter.ui.addYourTravel.AddYourTravelFragment"
+       android:name="com.example.globetrotter.ui.placesDetail.addYourTravel.AddYourTravelFragment"
        android:label="fragment_add_your_travel"
        tools:layout="@layout/fragment_add_your_travel" >
       <action
@@ -148,11 +148,6 @@
           app:popUpTo="@id/addYourTravelFragment"
           app:popUpToInclusive="true" />
    </fragment>
-   <fragment
-       android:id="@+id/storyFragment"
-       android:name="com.example.globetrotter.StoryFragment"
-       android:label="fragment_story"
-       tools:layout="@layout/fragment_story" />
    <fragment
        android:id="@+id/peopleVisitsFragment"
        android:name="com.example.globetrotter.ui.placesDetail.peopleVisits.PeopleVisitsFragment"
@@ -166,7 +161,24 @@
       <argument
           android:name="placesId"
           app:argType="string" />
+      <action
+          android:id="@+id/action_peopleVisitsFragment_to_overViewFragment"
+          app:destination="@id/overViewFragment" />
    </fragment>
+    <fragment
+        android:id="@+id/overViewFragment"
+        android:name="com.example.globetrotter.ui.placesDetail.peopleVisits.overView.OverViewFragment"
+        android:label="fragment_over_view"
+        tools:layout="@layout/fragment_over_view" >
+       <action
+           android:id="@+id/action_overViewFragment_to_peopleVisitsFragment"
+           app:destination="@id/peopleVisitsFragment"
+           app:popUpTo="@id/overViewFragment"
+           app:popUpToInclusive="true" />
+       <argument
+           android:name="userId"
+           app:argType="string" />
+    </fragment>
 </navigation>
 
 

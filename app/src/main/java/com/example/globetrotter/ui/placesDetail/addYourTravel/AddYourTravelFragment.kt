@@ -1,4 +1,4 @@
-package com.example.globetrotter.ui.addYourTravel
+package com.example.globetrotter.ui.placesDetail.addYourTravel
 
 import android.app.ProgressDialog
 import android.content.Intent
@@ -34,7 +34,6 @@ import java.util.UUID
 
 class AddYourTravelFragment : BottomSheetDialogFragment() {
     lateinit var binding: FragmentAddYourTravelBinding
-    private val viewModelDetail: PlacesDetailViewModel by viewModels()
     private val viewModel: AddYourTravelViewModel by viewModels()
     lateinit var auth: FirebaseAuth
     lateinit var firestore: FirebaseFirestore
@@ -79,6 +78,7 @@ class AddYourTravelFragment : BottomSheetDialogFragment() {
         buttonPost()
         registerLauncher()
     }
+
     private fun uploadStoryAndOverview() {
         val progress = ProgressDialog(requireActivity())
         progress.setMessage("Please wait while adding the post!")
@@ -96,23 +96,31 @@ class AddYourTravelFragment : BottomSheetDialogFragment() {
                     val myId = auth.currentUser!!.uid
                     val ref = firestore.collection("Story").document(myId)
                     val timeEnd = System.currentTimeMillis() + 86400000
-
-                    val storyData = hashMapOf(
-                        ConstValues.IMAGE_URL to downloadUrl,
-                        "timeStart" to System.currentTimeMillis(),
-                        "timeEnd" to timeEnd,
-                        "storyId" to randomKey,
-                        ConstValues.USER_ID to myId,
-                        "caption" to binding.edtCaption.text.toString()
-                    )
-
-                    ref.set(storyData, SetOptions.merge()).addOnSuccessListener {
+                    val hmapkey = hashMapOf<String, Any>()
+                    val hmap = hashMapOf<String, Any>()
+                    hmap[ConstValues.IMAGE_URL] = downloadUrl
+                    hmap["timeStart"] = System.currentTimeMillis()
+                    hmap["timeEnd"] = timeEnd
+                    hmap["storyId"] = randomKey
+                    hmap[ConstValues.USER_ID] = myId
+                    hmap["caption"] = binding.edtCaption.text.toString()
+                    hmap["placesId"] = placesId
+                    hmapkey[placesId] = hmap
+                    ref.set(hmapkey, SetOptions.merge()).addOnSuccessListener {
                         progress.dismiss()
-                        Toast.makeText(requireContext(), "Story successfully shared!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            "Story successfully shared!",
+                            Toast.LENGTH_SHORT
+                        ).show()
                         findNavController().popBackStack()
                     }.addOnFailureListener { error ->
                         progress.dismiss()
-                        Toast.makeText(requireContext(), "Story not shared: ${error.localizedMessage}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            "Story not shared: ${error.localizedMessage}",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }.addOnFailureListener {
                     progress.dismiss()

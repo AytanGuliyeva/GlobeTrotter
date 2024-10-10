@@ -1,4 +1,4 @@
-package com.example.globetrotter.ui.addYourTravel
+package com.example.globetrotter.ui.placesDetail.addYourTravel
 
 import androidx.lifecycle.ViewModel
 

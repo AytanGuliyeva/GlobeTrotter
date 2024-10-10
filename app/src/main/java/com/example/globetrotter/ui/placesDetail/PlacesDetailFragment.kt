@@ -22,7 +22,7 @@ import com.example.globetrotter.R
 import com.example.globetrotter.base.Resource
 import com.example.globetrotter.data.Places
 import com.example.globetrotter.databinding.FragmentPlacesDetailBinding
-import com.example.globetrotter.ui.addYourTravel.AddYourTravelFragment
+import com.example.globetrotter.ui.placesDetail.addYourTravel.AddYourTravelFragment
 import com.example.globetrotter.ui.getStarted.adapter.ViewPagerAdapter
 import com.example.globetrotter.ui.search.adapter.PlacesImageAdapter
 import com.google.android.material.tabs.TabLayoutMediator

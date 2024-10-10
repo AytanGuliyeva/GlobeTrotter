@@ -42,8 +42,8 @@ class PeopleVisitsViewModel : ViewModel() {
     }
 
     private fun fetchUserDetails(userIds: List<String>) {
-        val userDetails = mutableListOf<Pair<Users, Boolean>>() // User and boolean pair list
-        val userFetchTasks = mutableListOf<com.google.android.gms.tasks.Task<DocumentSnapshot>>()
+        val userDetails = mutableListOf<Pair<Users, Boolean>>()
+        val userFetchTasks = mutableListOf<Task<DocumentSnapshot>>()
 
         userIds.forEach { userId ->
             val userTask = firestore.collection("Users").document(userId).get()
@@ -51,21 +51,20 @@ class PeopleVisitsViewModel : ViewModel() {
         }
 
         Tasks.whenAllSuccess<DocumentSnapshot>(userFetchTasks).addOnSuccessListener {
-            val storyFetchTasks = mutableListOf<com.google.android.gms.tasks.Task<Boolean>>() // Store story tasks
+            val storyFetchTasks = mutableListOf<Task<Boolean>>()
 
             userFetchTasks.forEach { task ->
                 val document = task.result
                 val user = document.toUser()
                 user?.let {
-                    storyFetchTasks.add(fetchStoriesForUser(it.userId)) // Fetch story for each user
-                    userDetails.add(Pair(it, false)) // Initialize hasStory as false
+                    storyFetchTasks.add(fetchStoriesForUser(it.userId))
+                    userDetails.add(Pair(it, false))
                 }
             }
 
-            // Wait for all story fetch tasks to complete
             Tasks.whenAllSuccess<Boolean>(storyFetchTasks).addOnSuccessListener { storyResults ->
                 storyResults.forEachIndexed { index, hasStory ->
-                    userDetails[index] = Pair(userDetails[index].first, hasStory) // Update userDetails with story status
+                    userDetails[index] = Pair(userDetails[index].first, hasStory)
                 }
                 _peopleList.value = Resource.Success(userDetails)
             }.addOnFailureListener { exception ->
@@ -85,7 +84,7 @@ class PeopleVisitsViewModel : ViewModel() {
             .whereEqualTo("userId", userId)
             .get()
             .addOnSuccessListener { querySnapshot ->
-                val hasStory = querySnapshot.documents.isNotEmpty() // Set hasStory based on presence of documents
+                val hasStory = querySnapshot.documents.isNotEmpty()
                 taskCompletionSource.setResult(hasStory)
             }.addOnFailureListener { exception ->
                 taskCompletionSource.setException(exception)

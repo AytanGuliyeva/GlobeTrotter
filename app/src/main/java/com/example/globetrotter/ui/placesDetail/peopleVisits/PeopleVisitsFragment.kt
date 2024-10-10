@@ -16,15 +16,23 @@ import com.example.globetrotter.data.Users
 import com.example.globetrotter.databinding.FragmentPeopleVisitsBinding
 import com.example.globetrotter.ui.placesDetail.peopleVisits.adapter.VisitsAdapter
 import com.example.globetrotter.base.Resource
+import com.example.globetrotter.ui.placesDetail.addYourTravel.AddYourTravelFragment
+import com.example.globetrotter.ui.placesDetail.peopleVisits.overView.OverViewFragment
 
 class PeopleVisitsFragment : Fragment() {
+
     private lateinit var binding: FragmentPeopleVisitsBinding
     private lateinit var visitAdapter: VisitsAdapter
 
     private val viewModel: PeopleVisitsViewModel by viewModels()
     private val args: PeopleVisitsFragmentArgs by navArgs()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = FragmentPeopleVisitsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -36,37 +44,45 @@ class PeopleVisitsFragment : Fragment() {
         observeViewModel()
 
         viewModel.fetchVisitedPeople(args.placesId)
+
     }
 
     private fun initListener() {
         binding.buttonBack.setOnClickListener {
             findNavController().popBackStack()
         }
+
     }
 
     private fun setupRecyclerView() {
-        visitAdapter = VisitsAdapter()
+        visitAdapter = VisitsAdapter { user ->
+            val bottomSheet = OverViewFragment.newInstance(user.userId)
+            bottomSheet.show(childFragmentManager, bottomSheet.tag)
+//            val action =
+//                PeopleVisitsFragmentDirections.actionPeopleVisitsFragmentToOverViewFragment()
+//            findNavController().navigate(action)
+        }
+
         binding.rvPeople.layoutManager = LinearLayoutManager(context)
         binding.rvPeople.adapter = visitAdapter
     }
 
     private fun observeViewModel() {
-        viewModel.peopleList.observe(viewLifecycleOwner, Observer { resource ->
+        viewModel.peopleList.observe(viewLifecycleOwner) { resource ->
             when (resource) {
                 is Resource.Success -> {
                     resource.data?.let { userList ->
-                        visitAdapter.submitList(userList) // Users and story status
-                        Log.e("TAGstoryfrag", "fetchStoriesForUser: $userList", )
+                        visitAdapter.submitList(userList)
 
                     }
                 }
+
                 is Resource.Loading -> {
-                    // Handle loading state
                 }
+
                 is Resource.Error -> {
-                    // Handle error state
                 }
             }
-        })
+        }
     }
 }

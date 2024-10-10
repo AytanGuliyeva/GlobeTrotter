@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:padding="16dp"
+    android:elevation="8dp"
+    tools:context=".ui.placesDetail.peopleVisits.overView.OverViewFragment">
+
+    <TextView
+        android:id="@+id/txtCountryName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        tools:text="Country Name"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageView
+        android:id="@+id/imgCountry"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/txtCountryName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="Country image" />
+
+    <TextView
+        android:id="@+id/txtCaption"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Overview"
+        android:textSize="18sp"
+        android:textColor="@android:color/holo_blue_dark"
+        app:layout_constraintTop_toBottomOf="@id/imgCountry"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp" />
+
+    <TextView
+        android:id="@+id/txtStory"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        tools:text="Overview"
+        android:textSize="16sp"
+        android:textColor="@android:color/darker_gray"
+        android:lineSpacingExtra="4dp"
+        app:layout_constraintTop_toBottomOf="@id/txtCaption"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="4dp"
+        android:maxLines="4"
+        android:ellipsize="end"/>
+
+    <Button
+        android:id="@+id/btnSeeMore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Like the overview"
+        android:layout_marginTop="16dp"
+        android:drawableEnd="@drawable/icon_favourites"
+        android:backgroundTint="@color/blue2"
+        android:textColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/txtStory"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
