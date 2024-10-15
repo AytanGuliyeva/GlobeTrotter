@@ -65,12 +65,6 @@ class VisitsAdapter(private var itemClick: (item: Users) -> Unit) :
             binding.txtUsername.text = user.username
             val hasStory = item.second
             binding.imgOverview.visibility = if (hasStory) View.VISIBLE else View.GONE
-
-//            binding.imgOverview.setOnClickListener {
-//                val navController = androidx.navigation.Navigation.findNavController(itemView)
-//                val action = PeopleVisitsFragmentDirections.actionPeopleVisitsFragmentToOverViewFragment()
-//                navController.navigate(action)
-//            }
             itemView.setOnClickListener {
                 itemClick(user)
             }

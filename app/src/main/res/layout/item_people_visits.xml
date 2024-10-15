@@ -27,7 +27,7 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/imgProfile"
             app:layout_constraintStart_toEndOf="@+id/imgProfile"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@id/imgProfile" />
 
         <ImageView
             android:id="@+id/imgOverview"
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
             android:text="Visited"
-            android:textColor="@color/red"
+            android:textColor="@color/blue"
             app:layout_constraintBottom_toBottomOf="@id/imgProfile"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/imgProfile" />

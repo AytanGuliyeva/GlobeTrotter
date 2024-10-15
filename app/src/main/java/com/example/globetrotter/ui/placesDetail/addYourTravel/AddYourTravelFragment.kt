@@ -78,7 +78,6 @@ class AddYourTravelFragment : BottomSheetDialogFragment() {
         buttonPost()
         registerLauncher()
     }
-
     private fun uploadStoryAndOverview() {
         val progress = ProgressDialog(requireActivity())
         progress.setMessage("Please wait while adding the post!")
@@ -95,12 +94,9 @@ class AddYourTravelFragment : BottomSheetDialogFragment() {
                     val randomKey = UUID.randomUUID().toString()
                     val myId = auth.currentUser!!.uid
                     val ref = firestore.collection("Story").document(myId)
-                    val timeEnd = System.currentTimeMillis() + 86400000
                     val hmapkey = hashMapOf<String, Any>()
                     val hmap = hashMapOf<String, Any>()
                     hmap[ConstValues.IMAGE_URL] = downloadUrl
-                    hmap["timeStart"] = System.currentTimeMillis()
-                    hmap["timeEnd"] = timeEnd
                     hmap["storyId"] = randomKey
                     hmap[ConstValues.USER_ID] = myId
                     hmap["caption"] = binding.edtCaption.text.toString()
@@ -132,6 +128,63 @@ class AddYourTravelFragment : BottomSheetDialogFragment() {
             Toast.makeText(requireContext(), "Please select a photo", Toast.LENGTH_SHORT).show()
         }
     }
+
+
+    /*
+        private fun uploadStoryAndOverview() {
+            val progress = ProgressDialog(requireActivity())
+            progress.setMessage("Please wait while adding the post!")
+            progress.show()
+
+            val uuid = UUID.randomUUID()
+            val imageName = "$uuid.jpg"
+            val imageReference = storage.reference.child("story/$imageName")
+
+            selectPicture?.let {
+                imageReference.putFile(it).addOnSuccessListener {
+                    imageReference.downloadUrl.addOnSuccessListener { imgUrl ->
+                        val downloadUrl = imgUrl.toString()
+                        val randomKey = UUID.randomUUID().toString()
+                        val myId = auth.currentUser!!.uid
+                        val ref = firestore.collection("Story").document(myId)
+                        val timeEnd = System.currentTimeMillis() + 86400000
+                        val hmapkey = hashMapOf<String, Any>()
+                        val hmap = hashMapOf<String, Any>()
+                        hmap[ConstValues.IMAGE_URL] = downloadUrl
+                        hmap["timeStart"] = System.currentTimeMillis()
+                        hmap["timeEnd"] = timeEnd
+                        hmap["storyId"] = randomKey
+                        hmap[ConstValues.USER_ID] = myId
+                        hmap["caption"] = binding.edtCaption.text.toString()
+                        hmap["placesId"] = placesId
+                        hmapkey[placesId] = hmap
+                        ref.set(hmapkey, SetOptions.merge()).addOnSuccessListener {
+                            progress.dismiss()
+                            Toast.makeText(
+                                requireContext(),
+                                "Story successfully shared!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            findNavController().popBackStack()
+                        }.addOnFailureListener { error ->
+                            progress.dismiss()
+                            Toast.makeText(
+                                requireContext(),
+                                "Story not shared: ${error.localizedMessage}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }.addOnFailureListener {
+                        progress.dismiss()
+                        Toast.makeText(requireContext(), it.localizedMessage, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } ?: run {
+                progress.dismiss()
+                Toast.makeText(requireContext(), "Please select a photo", Toast.LENGTH_SHORT).show()
+            }
+        }
+    */
 
     private fun selectImage(view: View) {
         if (ContextCompat.checkSelfPermission(

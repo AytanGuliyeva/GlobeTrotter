@@ -56,11 +56,8 @@ class PeopleVisitsFragment : Fragment() {
 
     private fun setupRecyclerView() {
         visitAdapter = VisitsAdapter { user ->
-            val bottomSheet = OverViewFragment.newInstance(user.userId)
+            val bottomSheet = OverViewFragment.newInstance(user.userId,args.placesId)
             bottomSheet.show(childFragmentManager, bottomSheet.tag)
-//            val action =
-//                PeopleVisitsFragmentDirections.actionPeopleVisitsFragmentToOverViewFragment()
-//            findNavController().navigate(action)
         }
 
         binding.rvPeople.layoutManager = LinearLayoutManager(context)

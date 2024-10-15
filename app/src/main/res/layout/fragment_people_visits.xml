@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.placesDetail.peopleVisits.PeopleVisitsFragment">
+
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView1"
         android:layout_width="wrap_content"
@@ -25,15 +26,53 @@
             android:src="@drawable/icon_back" />
     </androidx.cardview.widget.CardView>
 
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/grey2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cardView1" />
+
+    <TextView
+        android:id="@+id/textVisiters"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Visiters"
+        android:textColor="@color/blue2"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/cardView1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/cardView1" />
+
+    <TextView
+        android:id="@+id/view2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/grey2"
+        android:drawablePadding="5dp"
+        android:maxLines="2"
+        android:paddingHorizontal="5dp"
+        android:text="@string/click_the_visiter_and_look_their_overview"
+        android:textColor="@color/red"
+        app:drawableStartCompat="@drawable/icon_warning"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvPeople"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cardView1"
-        tools:listitem="@layout/item_people_visits"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view2"
+        tools:listitem="@layout/item_people_visits" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

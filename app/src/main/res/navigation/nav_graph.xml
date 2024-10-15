@@ -178,6 +178,9 @@
        <argument
            android:name="userId"
            app:argType="string" />
+       <argument
+           android:name="placesId"
+           app:argType="string" />
     </fragment>
 </navigation>
 
