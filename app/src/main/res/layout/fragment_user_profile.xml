@@ -13,57 +13,57 @@
         android:layout_height="80dp"
         android:layout_margin="10dp"
         android:src="@drawable/profile_photo_default"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:civ_border_color="@color/white"
         app:civ_border_width="2dp"
-        app:layout_constraintVertical_bias="0.2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.2" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/buttonEdit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/circle"
-        android:src="@drawable/icon_edit"
         android:padding="5dp"
+        android:src="@drawable/icon_edit"
         app:layout_constraintBottom_toBottomOf="@id/imgProfile"
         app:layout_constraintEnd_toEndOf="@id/imgProfile" />
+
     <TextView
+        android:id="@+id/textName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imgProfile"
         android:layout_marginTop="20dp"
-        tools:text="Name"
         android:textColor="@color/white"
-        android:textSize="20sp"/>
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imgProfile"
+        tools:text="Name" />
+
     <ImageView
+        android:id="@+id/animation"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:id="@+id/animation"
-        app:layout_constraintStart_toEndOf="@id/textName"
-        app:layout_constraintTop_toTopOf="@id/textName"
         android:src="@drawable/travellingg"
         app:layout_constraintBottom_toBottomOf="@id/textName"
-        />
+        app:layout_constraintStart_toEndOf="@id/textName"
+        app:layout_constraintTop_toTopOf="@id/textName" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="30dp"
-        android:background="@color/white"
-        app:cardCornerRadius="20dp"
-        android:elevation="2dp"
         android:layout_marginTop="20dp"
+        android:background="@color/white"
+        android:elevation="2dp"
+        app:cardCornerRadius="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textName"
-       >
+        app:layout_constraintTop_toBottomOf="@id/textName">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -82,93 +82,130 @@
                 app:drawableStartCompat="@drawable/icon_edit"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
             <View
+                android:id="@+id/view"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:background="@color/grey2"
-                android:id="@+id/view"
                 android:layout_margin="3dp"
-                app:layout_constraintTop_toBottomOf="@id/editProfile"
-                app:layout_constraintStart_toStartOf="parent"
+                android:background="@color/grey2"
+                app:layout_constraintBottom_toTopOf="@id/changePassword"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/changePassword"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/editProfile" />
+
             <ImageView
+                android:id="@+id/iconNext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/iconNext"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/editProfile"
                 android:layout_marginEnd="5dp"
                 android:src="@drawable/icon_next"
-                app:layout_constraintBottom_toBottomOf="@id/editProfile"/>
+                app:layout_constraintBottom_toBottomOf="@id/editProfile"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/editProfile" />
 
             <TextView
                 android:id="@+id/changePassword"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Change Password"
                 android:drawablePadding="5dp"
+                android:text="Change Password"
                 android:textColor="@color/blue"
                 android:textSize="20sp"
                 app:drawableStartCompat="@drawable/icon_password"
                 app:layout_constraintStart_toStartOf="@id/editProfile"
                 app:layout_constraintTop_toBottomOf="@id/editProfile" />
+
             <ImageView
+                android:id="@+id/iconNext2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/iconNext2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/changePassword"
                 android:layout_marginEnd="5dp"
                 android:src="@drawable/icon_next"
-                app:layout_constraintBottom_toBottomOf="@id/changePassword"/>
+                app:layout_constraintBottom_toBottomOf="@id/changePassword"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/changePassword" />
 
             <View
+                android:id="@+id/view2"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:background="@color/grey2"
-                android:id="@+id/view2"
                 android:layout_margin="3dp"
-                app:layout_constraintTop_toBottomOf="@id/changePassword"
-                app:layout_constraintStart_toStartOf="parent"
+                android:background="@color/grey2"
+                app:layout_constraintBottom_toTopOf="@id/lookStory"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/language"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/changePassword" />
+
+            <TextView
+                android:id="@+id/lookStory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:drawablePadding="5dp"
+                android:text="Your Stories"
+                android:textColor="@color/blue"
+                android:textSize="20sp"
+                app:drawableStartCompat="@drawable/icon_story"
+                app:layout_constraintStart_toStartOf="@id/editProfile"
+                app:layout_constraintTop_toBottomOf="@id/changePassword" />
+
+            <ImageView
+                android:id="@+id/iconNext4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:src="@drawable/icon_next"
+                app:layout_constraintBottom_toBottomOf="@id/lookStory"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/lookStory" />
+
+            <View
+                android:id="@+id/view4"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_margin="3dp"
+                android:background="@color/grey2"
+                app:layout_constraintBottom_toTopOf="@id/language"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/lookStory" />
 
             <TextView
                 android:id="@+id/language"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Language"
                 android:drawablePadding="5dp"
-                app:drawableStartCompat="@drawable/icon_language"
+                android:text="Language"
                 android:textColor="@color/blue"
                 android:textSize="20sp"
+                app:drawableStartCompat="@drawable/icon_language"
                 app:layout_constraintStart_toStartOf="@id/editProfile"
-                app:layout_constraintTop_toBottomOf="@id/changePassword" />
+                app:layout_constraintTop_toBottomOf="@id/lookStory" />
 
             <ImageView
+                android:id="@+id/iconNext3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/iconNext3"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/language"
                 android:layout_marginEnd="5dp"
                 android:src="@drawable/icon_next"
-                app:layout_constraintBottom_toBottomOf="@id/language"/>
+                app:layout_constraintBottom_toBottomOf="@id/language"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/language" />
 
 
             <View
+                android:id="@+id/view3"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:background="@color/grey2"
-                android:id="@+id/view3"
                 android:layout_margin="3dp"
-                app:layout_constraintTop_toBottomOf="@id/language"
-                app:layout_constraintStart_toStartOf="parent"
+                android:background="@color/grey2"
+                app:layout_constraintBottom_toTopOf="@id/logOut"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/logOut"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/language" />
 
 
             <TextView
@@ -176,12 +213,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:drawablePadding="5dp"
-                app:drawableStartCompat="@drawable/icon_logout"
                 android:layout_marginBottom="15dp"
+                android:drawablePadding="5dp"
                 android:text="Log out"
                 android:textColor="@color/red"
                 android:textSize="20sp"
+                app:drawableStartCompat="@drawable/icon_logout"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@id/editProfile"
                 app:layout_constraintTop_toBottomOf="@id/language" />

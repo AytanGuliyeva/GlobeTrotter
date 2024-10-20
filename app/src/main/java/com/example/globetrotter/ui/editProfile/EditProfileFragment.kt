@@ -128,7 +128,6 @@ class EditProfileFragment : Fragment() {
         }
     }
 
-
     private fun uploadImage(username: String) {
         selectedImageBitmap?.let { bitmap ->
             val boas = ByteArrayOutputStream()
@@ -147,11 +146,11 @@ class EditProfileFragment : Fragment() {
                 }.addOnFailureListener {
                     Toast.makeText(requireContext(), "Failed to upload image", Toast.LENGTH_SHORT)
                         .show()
-                    // binding.progressBar.visibility = View.GONE
                 }
 
         }
     }
+
 
     private fun updateUserProfile(username: String, imageUrl: String) {
         viewModel.updateUserInfo(username, imageUrl, progressDialoq)

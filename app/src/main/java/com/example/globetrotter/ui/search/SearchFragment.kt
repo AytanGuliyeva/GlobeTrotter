@@ -108,8 +108,30 @@ class SearchFragment : Fragment() {
     }
 
     private fun filterPlacesByLocation(query: String?) {
-        query?.let {
-            viewModel.searchPlaces(it)
+        query?.let { searchText ->
+            viewModel.placesResult.observe(viewLifecycleOwner) { resource ->
+                when (resource) {
+                    is Resource.Success -> {
+                        val filteredPlaces = resource.data.filter { place ->
+                            val locationParts = place.location.split(",").map { it.trim() }
+                            locationParts.any { part -> part.contains(searchText, ignoreCase = true) }
+                        }
+                        placesAdapter.submitList(filteredPlaces)
+                    }
+
+                    is Resource.Error -> {
+                        Toast.makeText(
+                            requireContext(),
+                            "Failed to fetch places: ${resource.exception.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                    is Resource.Loading -> {
+                        Log.d("SearchFragment", "Loading places...")
+                    }
+                }
+            }
         }
     }
 

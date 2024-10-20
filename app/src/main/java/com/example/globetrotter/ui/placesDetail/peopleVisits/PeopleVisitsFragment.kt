@@ -42,7 +42,6 @@ class PeopleVisitsFragment : Fragment() {
         initListener()
         setupRecyclerView()
         observeViewModel()
-
         viewModel.fetchVisitedPeople(args.placesId)
 
     }
@@ -68,7 +67,7 @@ class PeopleVisitsFragment : Fragment() {
         viewModel.peopleList.observe(viewLifecycleOwner) { resource ->
             when (resource) {
                 is Resource.Success -> {
-                    resource.data?.let { userList ->
+                    resource.data.let { userList ->
                         visitAdapter.submitList(userList)
 
                     }

@@ -108,5 +108,9 @@ class UserProfileFragment : Fragment() {
             val action = UserProfileFragmentDirections.actionUserProfileFragmentToEditProfileFragment()
             findNavController().navigate(action)
         }
+        binding.changePassword.setOnClickListener {
+            val action = UserProfileFragmentDirections.actionUserProfileFragmentToChangePasswordFragment()
+            findNavController().navigate(action)
+        }
     }
 }
