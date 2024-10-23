@@ -112,5 +112,9 @@ class UserProfileFragment : Fragment() {
             val action = UserProfileFragmentDirections.actionUserProfileFragmentToChangePasswordFragment()
             findNavController().navigate(action)
         }
+        binding.lookOverview.setOnClickListener {
+            val action =  UserProfileFragmentDirections.actionUserProfileFragmentToMyOverViewsFragment()
+            findNavController().navigate(action)
+        }
     }
 }

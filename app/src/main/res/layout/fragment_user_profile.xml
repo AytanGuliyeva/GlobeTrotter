@@ -133,18 +133,18 @@
                 android:layout_height="2dp"
                 android:layout_margin="3dp"
                 android:background="@color/grey2"
-                app:layout_constraintBottom_toTopOf="@id/lookStory"
+                app:layout_constraintBottom_toTopOf="@id/lookOverview"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/changePassword" />
 
             <TextView
-                android:id="@+id/lookStory"
+                android:id="@+id/lookOverview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:drawablePadding="5dp"
-                android:text="Your Stories"
+                android:text="Your Overviews"
                 android:textColor="@color/blue"
                 android:textSize="20sp"
                 app:drawableStartCompat="@drawable/icon_story"
@@ -157,9 +157,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:src="@drawable/icon_next"
-                app:layout_constraintBottom_toBottomOf="@id/lookStory"
+                app:layout_constraintBottom_toBottomOf="@id/lookOverview"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/lookStory" />
+                app:layout_constraintTop_toTopOf="@id/lookOverview" />
 
             <View
                 android:id="@+id/view4"
@@ -170,7 +170,7 @@
                 app:layout_constraintBottom_toTopOf="@id/language"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/lookStory" />
+                app:layout_constraintTop_toBottomOf="@id/lookOverview" />
 
             <TextView
                 android:id="@+id/language"
@@ -183,7 +183,7 @@
                 android:textSize="20sp"
                 app:drawableStartCompat="@drawable/icon_language"
                 app:layout_constraintStart_toStartOf="@id/editProfile"
-                app:layout_constraintTop_toBottomOf="@id/lookStory" />
+                app:layout_constraintTop_toBottomOf="@id/lookOverview" />
 
             <ImageView
                 android:id="@+id/iconNext3"

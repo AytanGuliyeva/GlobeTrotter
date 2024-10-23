@@ -50,9 +50,6 @@ class PlacesAdapter(private var itemClick: (item: Places) -> Unit) :
                 itemClick(item)
             }
              binding.viewPager.adapter = imageAdapter
-//            TabLayoutMediator(binding.dotsIndicator, binding.viewPager) { tab, position ->
-//                tab.view.setBackgroundResource(R.drawable.tab_background)  // Dotted background drawable
-//            }.attach()
 
             val dotsIndicator = binding.dotsIndicator
             dotsIndicator.setViewPager2(binding.viewPager)

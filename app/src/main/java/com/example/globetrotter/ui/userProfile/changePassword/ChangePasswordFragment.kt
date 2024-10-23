@@ -1,4 +1,4 @@
-package com.example.globetrotter.ui.changePassword
+package com.example.globetrotter.ui.userProfile.changePassword
 
 import android.app.ProgressDialog
 import android.os.Bundle
@@ -12,6 +12,8 @@ import androidx.navigation.fragment.findNavController
 import com.example.globetrotter.base.Resource
 import com.example.globetrotter.data.Users
 import com.example.globetrotter.databinding.FragmentChangePasswordBinding
+import com.example.globetrotter.ui.search.adapter.PlacesAdapter
+import com.example.globetrotter.ui.userProfile.myOverviews.adapter.MyOverviewsAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -50,7 +52,6 @@ class ChangePasswordFragment : Fragment() {
                     Toast.makeText(requireContext(), "Error retrieving user info", Toast.LENGTH_SHORT).show()
                 }
                 is Resource.Loading -> {
-                    // Loading state
                 }
             }
         }

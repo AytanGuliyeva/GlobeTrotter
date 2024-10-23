@@ -16,8 +16,6 @@ import com.google.firebase.ktx.Firebase
 
 class OverViewViewModel : ViewModel() {
     private val firestore: FirebaseFirestore = Firebase.firestore
-    private var placesList: List<Places> = emptyList()
-
     private val _placesResult = MutableLiveData<Resource<Places>>()
     val placesResult: LiveData<Resource<Places>> get() = _placesResult
 
@@ -42,13 +40,13 @@ class OverViewViewModel : ViewModel() {
                         val storyPlacesId = story["placesId"] as String
 
                         if (storyPlacesId == placesId) {
-                            val storyi = Story(
+                            val story = Story(
                                 imageUrl = imageurl,
                                 storyId = storyId,
                                 caption = caption,
                                 placesId = storyPlacesId
                             )
-                            storyList.add(storyi)
+                            storyList.add(story)
                         }
                     }
                     if (storyList.isNotEmpty()) {
@@ -67,54 +65,6 @@ class OverViewViewModel : ViewModel() {
             _storyInformation.postValue(Resource.Error(it))
         }
     }
-
-    /*
-        fun getStories(userId: String, placesId: String) {
-            val ref = firestore.collection("Story").document(userId)
-            ref.get().addOnSuccessListener { value ->
-                if (value != null && value.exists()) {
-                    storyList.clear()
-                    try {
-                        val doc = value.data as HashMap<*, *>
-                        val timecurrent = System.currentTimeMillis()
-                        for (i in doc) {
-                            val story = i.value as HashMap<*, *>
-                            val timestart = story["timeStart"] as Long
-                            val timeend = story["timeEnd"] as Long
-                            val imageurl = story[ConstValues.IMAGE_URL] as String
-                            val storyId = story["storyId"] as String
-                            val caption = story["caption"] as String
-                            val storyPlacesId = story["placesId"] as String
-
-                            if (timecurrent in (timestart + 1) until timeend && storyPlacesId == placesId) {
-                                val storyi = Story(
-                                    imageUrl = imageurl,
-                                    timeStart = timestart,
-                                    storyId = storyId,
-                                    caption = caption,
-                                    placesId = storyPlacesId
-                                )
-                                storyList.add(storyi)
-                            }
-                        }
-                        if (storyList.isNotEmpty()) {
-                            _storyInformation.postValue(Resource.Success(storyList))
-                        } else {
-                            _storyInformation.postValue(Resource.Error(Exception("No stories available for this place")))
-                        }
-                    } catch (e: NullPointerException) {
-                        e.printStackTrace()
-                        _storyInformation.postValue(Resource.Error(e))
-                    }
-                } else {
-                    _storyInformation.postValue(Resource.Error(Exception("No stories found for this user")))
-                }
-            }.addOnFailureListener {
-                _storyInformation.postValue(Resource.Error(it))
-            }
-        }
-    */
-
     fun fetchPlaces(placesId: String) {
         firestore.collection("Places").document(placesId)
             .get()

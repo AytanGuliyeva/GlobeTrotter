@@ -57,7 +57,6 @@ class FavouritesFragment : Fragment() {
                     placesAdapter.submitList(placesList)
                     if (placesList.isEmpty()) {
                         binding.noPost.visibility=View.VISIBLE
-                       // Toast.makeText(requireContext(), "No favourites found.", Toast.LENGTH_SHORT).show()
                     }
                 }
                 is Resource.Error -> {
