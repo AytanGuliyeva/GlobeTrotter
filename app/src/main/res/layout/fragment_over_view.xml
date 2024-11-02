@@ -101,19 +101,24 @@
         app:layout_constraintTop_toBottomOf="@id/txtCaption"
         tools:text="Overview" />
 
-    <Button
-        android:id="@+id/btnSeeMore"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="@color/blue2"
-        android:drawableEnd="@drawable/icon_favourites"
-        android:text="Like the overview"
+        android:layout_margin="10dp"
+        app:cardCornerRadius="10dp"
         android:visibility="gone"
-        android:textColor="@android:color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txtStory" />
+        app:layout_constraintEnd_toEndOf="@id/imgCountry"
+        app:layout_constraintTop_toTopOf="@id/imgCountry"
+        app:layout_constraintVertical_bias="0.0">
 
+        <ImageView
+            android:id="@+id/buttonFav"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/blue2"
+            android:padding="5dp"
+            android:src="@drawable/icon_favourites" />
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

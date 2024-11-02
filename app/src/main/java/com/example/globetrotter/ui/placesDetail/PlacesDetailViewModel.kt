@@ -164,7 +164,7 @@ class PlacesDetailViewModel : ViewModel() {
         }
     }
 
-    //
+
     // Like
     fun toggleLikeStatus(placesId: String, imageView: ImageView) {
         val tag = imageView.tag?.toString() ?: ""

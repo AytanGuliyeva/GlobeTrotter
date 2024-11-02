@@ -76,14 +76,23 @@ class OverViewFragment : BottomSheetDialogFragment() {
                     if (story != null) {
                         binding.imgCountry.visibility = View.VISIBLE
                         binding.txtStory.visibility = View.VISIBLE
-                        binding.btnSeeMore.visibility=View.VISIBLE
+                        binding.buttonFav.visibility=View.VISIBLE
                         binding.txtCaption.visibility=View.VISIBLE
                         binding.noPost.visibility=View.GONE
+
 
                         Glide.with(binding.root)
                             .load(story.imageUrl)
                             .into(binding.imgCountry)
                         binding.txtStory.text = story.caption
+
+                        if (auth.currentUser!!.uid==story.userId){
+                            binding.buttonFav.visibility=View.VISIBLE
+                            viewModel.checkLikeStatus(story.storyId,binding.buttonFav)
+                            binding.buttonFav.setOnClickListener {
+                                viewModel.toggleLikeStatus(story.storyId,binding.buttonFav)
+                            }
+                        }
 
                     } else {
                         binding.noPost.visibility=View.VISIBLE
@@ -96,7 +105,7 @@ class OverViewFragment : BottomSheetDialogFragment() {
                 is Resource.Error -> {
                     binding.imgCountry.visibility = View.GONE
                     binding.txtStory.visibility = View.GONE
-                    binding.btnSeeMore.visibility=View.GONE
+                    binding.buttonFav.visibility=View.GONE
                     binding.txtCaption.visibility=View.GONE
                 }
                 is Resource.Loading -> { /* Handle loading */ }

@@ -12,74 +12,27 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 
 class MyOverviewsViewModel : ViewModel() {
-    private var firestore = FirebaseFirestore.getInstance()
-    private var auth: FirebaseAuth = FirebaseAuth.getInstance()
-
-    private val overviewList = ArrayList<Story>()
-
-    private val _userInformation = MutableLiveData<Resource<Users>>()
-    val userInformation: LiveData<Resource<Users>>
-        get() = _userInformation
+    private val firestore = FirebaseFirestore.getInstance()
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     private val _storyInformation = MutableLiveData<Resource<Map<String, Story>>>()
     val storyInformation: LiveData<Resource<Map<String, Story>>>
         get() = _storyInformation
 
-
     private val _overviewDeleted = MutableLiveData<Resource<Boolean>>()
     val overviewDeleted: LiveData<Resource<Boolean>>
         get() = _overviewDeleted
-
-
-    /*
-        fun getOverviews() {
-            val ref = firestore.collection("Story").document(auth.currentUser!!.uid)
-            ref.get().addOnSuccessListener { value ->
-                if (value != null && value.exists()) {
-                    overviewList.clear()
-                    try {
-                        val doc = value.data as HashMap<*, *>
-                        for (i in doc) {
-                            val story = i.value as HashMap<*, *>
-                            val imageurl = story[ConstValues.IMAGE_URL] as String
-                            val storyId = story["storyId"] as String
-                            val caption = story["caption"] as String
-                            val storyPlacesId = story["placesId"] as String
-
-                            val storyi = Story(
-                                imageUrl = imageurl,
-                                storyId = storyId,
-                                caption = caption,
-                                placesId = storyPlacesId
-                            )
-                            overviewList.add(storyi)
-                            _storyInformation.postValue(Resource.Success(overviewList))
-
-
-                        }
-                    } catch (e: java.lang.NullPointerException) {
-                        e.printStackTrace()
-                    }
-                }
-            }
-        }
-    */
-
 
     fun getOverviews() {
         val ref = firestore.collection("Story").document(auth.currentUser!!.uid)
         ref.get().addOnSuccessListener { value ->
             if (value != null && value.exists()) {
-                overviewList.clear()
                 val storyMap = mutableMapOf<String, Story>()
                 val doc = value.data as HashMap<*, *>
-
-                val placesIds = doc.values.map {
-                    (it as HashMap<*, *>)["placesId"] as String
-                }.toSet()
-
+                val placesIds = doc.values.map { (it as HashMap<*, *>)["placesId"] as String }.toSet()
                 if (placesIds.isNotEmpty()){
-                firestore.collection("Places").whereIn("placesId", placesIds.toList()).get()
+
+                    firestore.collection("Places").whereIn("placesId", placesIds.toList()).get()
                     .addOnSuccessListener { placeDocs ->
                         val placeNameMap = placeDocs.documents.associateBy(
                             { it.id },
@@ -110,15 +63,15 @@ class MyOverviewsViewModel : ViewModel() {
         }
     }
 
-
     fun deleteOverview(placesId: String) {
-        firestore.collection("Story").document(auth.currentUser!!.uid).update(mapOf(placesId to FieldValue.delete()))
+        firestore.collection("Story").document(auth.currentUser!!.uid)
+            .update(mapOf(placesId to FieldValue.delete()))
             .addOnSuccessListener {
                 _overviewDeleted.postValue(Resource.Success(true))
-                getOverviews()
+                getOverviews()  // Refresh overviews after deletion
             }
             .addOnFailureListener {
+
             }
     }
-
 }

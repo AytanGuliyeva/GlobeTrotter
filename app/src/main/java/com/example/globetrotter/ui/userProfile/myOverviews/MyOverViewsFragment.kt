@@ -50,53 +50,36 @@ class MyOverViewsFragment : Fragment() {
         initNavigationListeners()
         setupRecyclerView()
         viewModel.getOverviews()
+        observeViewModel()
+
+    }
+
+    private fun observeViewModel() {
         viewModel.storyInformation.observe(viewLifecycleOwner) { resource ->
             when (resource) {
                 is Resource.Success -> {
                     val storyMap = resource.data
-                    storyMap.let {
-                        if (storyMap.isNotEmpty()){
-                            binding.noPost.visibility=View.GONE
-                        }
-                        myOverviewsAdapter.submitStoryMap(it)
-                    }
+                    binding.noPost.visibility = if (storyMap.isNotEmpty()) View.GONE else View.VISIBLE
+                    myOverviewsAdapter.submitStoryMap(storyMap)
                 }
-                is Resource.Loading -> {}
-                is Resource.Error -> {}
+                is Resource.Loading -> { /* Show loading if needed */ }
+                is Resource.Error -> { /* Show error if needed */ }
             }
         }
+
         viewModel.overviewDeleted.observe(viewLifecycleOwner) { resource ->
             when (resource) {
                 is Resource.Success -> {
                     if (resource.data == true) {
-                        Toast.makeText(requireContext(), "Post deleted", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Overview deleted", Toast.LENGTH_SHORT).show()
                     }
                 }
                 is Resource.Error -> {
-                    Toast.makeText(requireContext(), "Error deleting post", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Error deleting overview", Toast.LENGTH_SHORT).show()
                 }
-                is Resource.Loading -> {
-                    // Show a loading indicator if needed
-                }
+                is Resource.Loading -> { /* Show loading if needed */ }
             }
         }
-
-        /*viewModel.storyInformation.observe(viewLifecycleOwner) { overviewResource ->
-            when (overviewResource) {
-                is Resource.Success -> {
-                    overviewList.clear()
-                    overviewList.addAll(overviewResource.data)
-                    myOverviewsAdapter.submitList(overviewList)
-                    if (overviewList.isNotEmpty()){
-                        binding.noPost.visibility=View.GONE
-                    }
-                    Log.e("TAG", "onViewCreated: ${overviewResource.data}")
-                }
-
-                is Resource.Error -> {}
-                is Resource.Loading -> {}
-            }
-        }*/
     }
 
     private fun setupRecyclerView() {
@@ -107,15 +90,13 @@ class MyOverViewsFragment : Fragment() {
         binding.rvOverview.adapter = myOverviewsAdapter
     }
 
-
     private fun showDeleteConfirmationDialog(placesId: String) {
         AlertDialog.Builder(requireContext())
-            .setTitle("Delete Post")
-            .setMessage("Are you sure you want to delete this post?")
+            .setTitle("Delete Overview")
+            .setMessage("Are you sure you want to delete this overview?")
             .setPositiveButton("Delete") { dialog, _ ->
                 viewModel.deleteOverview(placesId)
                 dialog.dismiss()
-                viewModel.getOverviews()
             }
             .setNegativeButton("Cancel") { dialog, _ ->
                 dialog.dismiss()
@@ -128,5 +109,5 @@ class MyOverViewsFragment : Fragment() {
             findNavController().navigateUp()
         }
     }
-
 }
+
