@@ -7,10 +7,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
+import androidx.work.BackoffPolicy
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
+import androidx.work.WorkRequest
 import com.example.globetrotter.databinding.ActivityMainBinding
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,6 +30,22 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         auth = Firebase.auth
+
+//
+//        val workRequest: WorkRequest = OneTimeWorkRequest.Builder(SpecialDayWorker::class.java)
+//            .setInitialDelay(10, TimeUnit.SECONDS) // İşin 10 saniye sonra çalışması
+//            .build()
+//
+//        // WorkManager ile iş başlatma
+//        WorkManager.getInstance(this).enqueue(workRequest)
+        // Worker için OneTimeWorkRequest oluşturuluyor
+        val workRequest: OneTimeWorkRequest = OneTimeWorkRequest.Builder(SpecialDayWorker::class.java)
+            .setInitialDelay(1, TimeUnit.DAYS)  // 1 gün sonra çalışmaya başla
+            .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 10, TimeUnit.MINUTES)  // Başarısız olursa 10 dakika bekle
+            .build()
+
+        // WorkManager ile işi kuyruğa ekliyoruz
+        WorkManager.getInstance(this).enqueue(workRequest)
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment

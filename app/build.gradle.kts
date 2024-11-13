@@ -81,6 +81,12 @@ dependencies {
   // implementation ("com.github.shts:StoriesProgressView:3.0.0")
 
 
+    //FCM
+    implementation ("com.google.firebase:firebase-messaging:19.0.1")
+    implementation("com.android.volley:volley:1.2.1")
+
+    implementation ("androidx.work:work-runtime-ktx:2.7.1")
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
