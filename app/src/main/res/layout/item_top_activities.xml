@@ -10,10 +10,10 @@
         android:id="@+id/categoryNames"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
+        android:layout_margin="10dp"
         android:drawablePadding="5dp"
         app:drawableStartCompat="@drawable/icon_beach"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Category" />
     <androidx.recyclerview.widget.RecyclerView

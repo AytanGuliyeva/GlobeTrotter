@@ -27,25 +27,26 @@ class OverViewFragment : BottomSheetDialogFragment() {
 
     lateinit var auth: FirebaseAuth
     lateinit var firestore: FirebaseFirestore
+
     companion object {
-        fun newInstance(userId: String,placesId:String): OverViewFragment {
+        fun newInstance(userId: String, placesId: String): OverViewFragment {
             val fragment = OverViewFragment()
             val args = Bundle()
             args.putString("userId", userId)
-            args.putString("placesId",placesId)
+            args.putString("placesId", placesId)
             fragment.arguments = args
             return fragment
         }
     }
 
     private lateinit var userId: String
-    private lateinit var placesId:String
+    private lateinit var placesId: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentOverViewBinding.inflate(inflater,container,false)
+        binding = FragmentOverViewBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -60,13 +61,17 @@ class OverViewFragment : BottomSheetDialogFragment() {
 
         viewModel.getStories(userId, placesId)
         viewModel.fetchPlaces(placesId)
-        viewModel.placesResult.observe(viewLifecycleOwner){placeResult ->
+        viewModel.placesResult.observe(viewLifecycleOwner) { placeResult ->
             when (placeResult) {
                 is Resource.Success -> {
-                    binding.txtCountryName.text=placeResult.data.place
+                    binding.txtCountryName.text = placeResult.data.place
                 }
-                is Resource.Error -> { /* Handle error */ }
-                is Resource.Loading -> { /* Handle loading */ }
+
+                is Resource.Error -> { /* Handle error */
+                }
+
+                is Resource.Loading -> { /* Handle loading */
+                }
             }
         }
         viewModel.storyInformation.observe(viewLifecycleOwner) { storyResource ->
@@ -76,39 +81,36 @@ class OverViewFragment : BottomSheetDialogFragment() {
                     if (story != null) {
                         binding.imgCountry.visibility = View.VISIBLE
                         binding.txtStory.visibility = View.VISIBLE
-                        binding.buttonFav.visibility=View.VISIBLE
-                        binding.txtCaption.visibility=View.VISIBLE
-                        binding.noPost.visibility=View.GONE
-
+                        binding.buttonFav.visibility = View.VISIBLE
+                        binding.txtCaption.visibility = View.VISIBLE
+                        binding.noPost.visibility = View.GONE
 
                         Glide.with(binding.root)
                             .load(story.imageUrl)
                             .into(binding.imgCountry)
                         binding.txtStory.text = story.caption
 
-                        if (auth.currentUser!!.uid==story.userId){
-                            binding.buttonFav.visibility=View.VISIBLE
-                            viewModel.checkLikeStatus(story.storyId,binding.buttonFav)
+                        if (auth.currentUser!!.uid != story.userId) {
+                            binding.cardView2.visibility = View.VISIBLE
+                            viewModel.checkLikeStatus(story.storyId, binding.buttonFav)
                             binding.buttonFav.setOnClickListener {
-                                viewModel.toggleLikeStatus(story.storyId,binding.buttonFav)
+                                viewModel.toggleLikeStatus(story.storyId, binding.buttonFav)
                             }
                         }
 
                     } else {
-                        binding.noPost.visibility=View.VISIBLE
-//                        binding.imgCountry.visibility = View.GONE
-//                        binding.txtStory.visibility = View.GONE
-//                        binding.btnSeeMore.visibility=View.GONE
-//                        binding.txtCaption.visibility=View.GONE
+                        binding.noPost.visibility = View.VISIBLE
                     }
                 }
+
                 is Resource.Error -> {
                     binding.imgCountry.visibility = View.GONE
                     binding.txtStory.visibility = View.GONE
-                    binding.buttonFav.visibility=View.GONE
-                    binding.txtCaption.visibility=View.GONE
+                    binding.buttonFav.visibility = View.GONE
+                    binding.txtCaption.visibility = View.GONE
                 }
-                is Resource.Loading -> { /* Handle loading */ }
+
+                is Resource.Loading -> {}
             }
         }
 

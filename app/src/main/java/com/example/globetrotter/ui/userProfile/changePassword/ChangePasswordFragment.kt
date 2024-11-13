@@ -66,7 +66,7 @@ class ChangePasswordFragment : Fragment() {
                     progressDialoq.show()
                     val newPassword = binding.editReNewPassword.text.toString()
                     viewModel.updateUserInfo(newPassword, progressDialoq)
-
+                    auth.currentUser!!.updatePassword(newPassword)
                 } else {
                     Toast.makeText(requireContext(), "Re-typed password doesn't match.", Toast.LENGTH_SHORT).show()
                 }

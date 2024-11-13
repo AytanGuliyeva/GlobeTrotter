@@ -48,8 +48,9 @@ class OverViewViewModel : ViewModel() {
 
                         if (storyPlacesId == placesId) {
                             val story = Story(
-                                imageUrl = imageurl,
                                 storyId = storyId,
+                                userId = userId,
+                                imageUrl = imageurl,
                                 caption = caption,
                                 placesId = storyPlacesId
                             )
@@ -129,8 +130,9 @@ class OverViewViewModel : ViewModel() {
                 Log.e("checkFavStatus", "Error checking fav status: $exception")
             }
     }
-    private fun addLike(overviewId: String){
-        val likeData= hashMapOf(
+
+    private fun addLike(overviewId: String) {
+        val likeData = hashMapOf(
             auth.currentUser!!.uid to true
         )
 
@@ -144,9 +146,9 @@ class OverViewViewModel : ViewModel() {
             }
     }
 
-    private fun removeLike(overviewId: String){
+    private fun removeLike(overviewId: String) {
         firestore.collection("LikesOverview").document(overviewId)
-            .update(auth.currentUser!!.uid,FieldValue.delete())
+            .update(auth.currentUser!!.uid, FieldValue.delete())
             .addOnSuccessListener {
                 Log.d("removeFavFromFirestore", "Fav removed successfully")
             }
