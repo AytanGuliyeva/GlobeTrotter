@@ -14,11 +14,17 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class PlacesDetailViewModel : ViewModel() {
+@HiltViewModel
+class PlacesDetailViewModel @Inject constructor(
+    val firestore: FirebaseFirestore,
+    val auth: FirebaseAuth
+) : ViewModel() {
 
-    private val firestore = FirebaseFirestore.getInstance()
-    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+//    private val firestore = FirebaseFirestore.getInstance()
+//    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     var category: String = ""
 
     private val _placesResult = MutableLiveData<Resource<Places>>()

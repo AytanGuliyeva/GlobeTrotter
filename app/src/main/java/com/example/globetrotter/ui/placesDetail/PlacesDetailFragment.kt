@@ -31,14 +31,23 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class PlacesDetailFragment : Fragment() {
     private lateinit var binding: FragmentPlacesDetailBinding
-    private val viewModel: PlacesDetailViewModel by viewModels()
+     val viewModel: PlacesDetailViewModel by viewModels()
     val args: PlacesDetailFragmentArgs by navArgs()
-    lateinit var auth: FirebaseAuth
-    lateinit var firestore: FirebaseFirestore
+//    lateinit var auth: FirebaseAuth
+//    lateinit var firestore: FirebaseFirestore
 
+
+    @Inject
+    lateinit var auth: FirebaseAuth
+
+    @Inject
+    lateinit var firestore: FirebaseFirestore
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -14,8 +14,9 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.globetrotter.MainActivity
 import com.example.globetrotter.R
 import com.example.globetrotter.databinding.FragmentGetStartedBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class GetStartedFragment : Fragment() {
     private lateinit var binding: FragmentGetStartedBinding
 

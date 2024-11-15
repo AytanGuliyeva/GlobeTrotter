@@ -24,15 +24,22 @@ import com.google.android.material.chip.ChipGroup
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 import kotlin.math.log
 
-class DiscoverActivitiesViewModel() : ViewModel() {
-    private var firestore = FirebaseFirestore.getInstance()
-    private var auth: FirebaseAuth = FirebaseAuth.getInstance()
+@HiltViewModel
+class DiscoverActivitiesViewModel @Inject constructor(
+    val firestore: FirebaseFirestore,
+    val auth: FirebaseAuth
+) : ViewModel() {
+
+   // private var firestore = FirebaseFirestore.getInstance()
+    //private var auth: FirebaseAuth = FirebaseAuth.getInstance()
     private val uniqueCategories = mutableSetOf<String>()
 
     private val _isVisited = MutableLiveData<Boolean>()

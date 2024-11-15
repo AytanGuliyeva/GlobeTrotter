@@ -1,6 +1,8 @@
 package com.example.globetrotter.ui.discoverActivities
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,25 +12,35 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.globetrotter.R
+import com.example.globetrotter.base.ConstValues
 import com.example.globetrotter.base.Resource
 import com.example.globetrotter.databinding.FragmentDiscoverActivitiesBinding
 import com.example.globetrotter.ui.discoverActivities.adapter.CategoryAdapter
 import com.example.globetrotter.ui.discoverActivities.adapter.TopPlacesAdapter
-import com.example.globetrotter.ui.discoverActivities.story.adapter.StoryAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class DiscoverActivitiesFragment : Fragment() {
     private lateinit var binding: FragmentDiscoverActivitiesBinding
-    private val viewModel: DiscoverActivitiesViewModel by viewModels()
+     val viewModel: DiscoverActivitiesViewModel by viewModels()
+
+    //    lateinit var auth: FirebaseAuth
+//    lateinit var firestore: FirebaseFirestore
+    @Inject
     lateinit var auth: FirebaseAuth
+
+    @Inject
     lateinit var firestore: FirebaseFirestore
-    private lateinit var storyAdapter: StoryAdapter
+
     private lateinit var categoryAdapter: CategoryAdapter
     private lateinit var topPlacesAdapter: TopPlacesAdapter
+    private var token: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,9 +54,12 @@ class DiscoverActivitiesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         auth = Firebase.auth
         firestore = Firebase.firestore
+        firestore.collection(ConstValues.USERS).document(auth.currentUser!!.uid)
+            .update("token", token)
         setupRecyclerView()
         viewModel.fetchPopularPlaces()
         viewModel.fetchCategories()
+        readPreference()
         viewModel.places.observe(viewLifecycleOwner) { placesResource ->
             when (placesResource) {
                 is Resource.Success -> {
@@ -53,6 +68,7 @@ class DiscoverActivitiesFragment : Fragment() {
                     categoryAdapter.categoryPlaces.addAll(placesResource.data)
                     categoryAdapter.notifyDataSetChanged()
                 }
+
                 is Resource.Error -> {
                     Toast.makeText(
                         requireContext(),
@@ -86,6 +102,14 @@ class DiscoverActivitiesFragment : Fragment() {
 
     }
 
+
+    private fun readPreference() {
+        activity?.let {
+            val sharedPreferences = it.getSharedPreferences("userPreference", Context.MODE_PRIVATE)
+            token = sharedPreferences.getString("token", "")
+            Log.e("TAGdiscover", "readPreference: $token")
+        }
+    }
 
     private fun setupRecyclerView() {
         categoryAdapter = CategoryAdapter({ place ->

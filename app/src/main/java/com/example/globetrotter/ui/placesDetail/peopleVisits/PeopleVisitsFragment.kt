@@ -1,30 +1,27 @@
 package com.example.globetrotter.ui.placesDetail.peopleVisits
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.globetrotter.R
-import com.example.globetrotter.data.Users
 import com.example.globetrotter.databinding.FragmentPeopleVisitsBinding
 import com.example.globetrotter.ui.placesDetail.peopleVisits.adapter.VisitsAdapter
 import com.example.globetrotter.base.Resource
-import com.example.globetrotter.ui.placesDetail.addYourTravel.AddYourTravelFragment
 import com.example.globetrotter.ui.placesDetail.peopleVisits.overView.OverViewFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class PeopleVisitsFragment : Fragment() {
 
     private lateinit var binding: FragmentPeopleVisitsBinding
     private lateinit var visitAdapter: VisitsAdapter
 
-    private val viewModel: PeopleVisitsViewModel by viewModels()
+    val viewModel: PeopleVisitsViewModel by viewModels()
     private val args: PeopleVisitsFragmentArgs by navArgs()
 
 
@@ -67,6 +64,7 @@ class PeopleVisitsFragment : Fragment() {
         viewModel.peopleList.observe(viewLifecycleOwner) { resource ->
             when (resource) {
                 is Resource.Success -> {
+                    binding.noPost.visibility = View.GONE
                     resource.data.let { userList ->
                         visitAdapter.submitList(userList)
 

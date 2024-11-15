@@ -19,12 +19,21 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ChangePasswordFragment : Fragment() {
     private lateinit var binding: FragmentChangePasswordBinding
-    private val viewModel: ChangePasswordViewModel by viewModels()
+     val viewModel: ChangePasswordViewModel by viewModels()
     private lateinit var progressDialoq: ProgressDialog
+//    lateinit var auth: FirebaseAuth
+//    lateinit var firestore: FirebaseFirestore
+
+    @Inject
     lateinit var auth: FirebaseAuth
+
+    @Inject
     lateinit var firestore: FirebaseFirestore
 
     override fun onCreateView(

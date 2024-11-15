@@ -22,17 +22,21 @@ class MyService : FirebaseMessagingService() {
 
 
     override fun onNewToken(token: String) {
-        Log.e("TAG", "onNewToken: $token", )
+        Log.e("onNewToken", "onNewToken: $token", )
         saveLoginPreferences(token)
         super.onNewToken(token)
-        //  Log.e("TAG", "onNewToken: $token", )
     }
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
 
-        Log.d("MyService", "Received message: ${message.data}")
-
         val intent = Intent(this, MainActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(
+            this,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notificationID = Random().nextInt(3000)
 
@@ -44,6 +48,7 @@ class MyService : FirebaseMessagingService() {
             .setSmallIcon(R.drawable.app_icon_3)
             .setContentTitle(message.data["title"])
             .setContentText(message.data["message"])
+            .setContentIntent(pendingIntent)
             .setAutoCancel(true)
             .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
 
@@ -53,16 +58,17 @@ class MyService : FirebaseMessagingService() {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private fun setupChannels(notificationManager: NotificationManager?) {
         val adminChannelName = "New notification"
-        val adminChannelDescription = "Device to devie notification"
+        val adminChannelDescription = "Device to device notification"
 
-        val adminChannel: NotificationChannel
-        adminChannel = NotificationChannel(ADMIN_CHANNEL_ID, adminChannelName, NotificationManager.IMPORTANCE_HIGH)
+        val adminChannel = NotificationChannel(ADMIN_CHANNEL_ID, adminChannelName, NotificationManager.IMPORTANCE_HIGH)
         adminChannel.description = adminChannelDescription
         adminChannel.enableLights(true)
         adminChannel.lightColor = Color.RED
         adminChannel.enableVibration(true)
+
         notificationManager?.createNotificationChannel(adminChannel)
     }
+
     private fun saveLoginPreferences(token: String) {
         val sharedPreferences = getSharedPreferences("userPreference", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()

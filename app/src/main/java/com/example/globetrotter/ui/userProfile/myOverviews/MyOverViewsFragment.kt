@@ -23,8 +23,10 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class MyOverViewsFragment : Fragment() {
     private lateinit var binding: FragmentMyOverViewsBinding
     val viewModel: MyOverviewsViewModel by viewModels()
@@ -32,7 +34,12 @@ class MyOverViewsFragment : Fragment() {
     private lateinit var myOverviewsAdapter: MyOverviewsAdapter
 
 
+    //    lateinit var auth: FirebaseAuth
+//    lateinit var firestore: FirebaseFirestore
+    @Inject
     lateinit var auth: FirebaseAuth
+
+    @Inject
     lateinit var firestore: FirebaseFirestore
 
     override fun onCreateView(
@@ -59,11 +66,16 @@ class MyOverViewsFragment : Fragment() {
             when (resource) {
                 is Resource.Success -> {
                     val storyMap = resource.data
-                    binding.noPost.visibility = if (storyMap.isNotEmpty()) View.GONE else View.VISIBLE
+                    binding.noPost.visibility =
+                        if (storyMap.isNotEmpty()) View.GONE else View.VISIBLE
                     myOverviewsAdapter.submitStoryMap(storyMap)
                 }
-                is Resource.Loading -> { /* Show loading if needed */ }
-                is Resource.Error -> { /* Show error if needed */ }
+
+                is Resource.Loading -> { /* Show loading if needed */
+                }
+
+                is Resource.Error -> { /* Show error if needed */
+                }
             }
         }
 
@@ -71,13 +83,18 @@ class MyOverViewsFragment : Fragment() {
             when (resource) {
                 is Resource.Success -> {
                     if (resource.data == true) {
-                        Toast.makeText(requireContext(), "Overview deleted", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Overview deleted", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
+
                 is Resource.Error -> {
-                    Toast.makeText(requireContext(), "Error deleting overview", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Error deleting overview", Toast.LENGTH_SHORT)
+                        .show()
                 }
-                is Resource.Loading -> { /* Show loading if needed */ }
+
+                is Resource.Loading -> { /* Show loading if needed */
+                }
             }
         }
     }

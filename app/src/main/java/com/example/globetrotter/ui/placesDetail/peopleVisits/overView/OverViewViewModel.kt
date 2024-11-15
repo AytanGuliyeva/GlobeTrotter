@@ -18,10 +18,16 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class OverViewViewModel : ViewModel() {
-    private val firestore: FirebaseFirestore = Firebase.firestore
-    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+@HiltViewModel
+class OverViewViewModel @Inject constructor(
+    val firestore: FirebaseFirestore,
+    val auth: FirebaseAuth
+) : ViewModel() {
+//    private val firestore: FirebaseFirestore = Firebase.firestore
+//    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     private val _placesResult = MutableLiveData<Resource<Places>>()
     val placesResult: LiveData<Resource<Places>> get() = _placesResult

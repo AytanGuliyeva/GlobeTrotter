@@ -15,8 +15,9 @@ import com.example.globetrotter.R
 import com.example.globetrotter.base.Resource
 import com.example.globetrotter.databinding.FragmentSignUpBinding
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class SignUpFragment : Fragment() {
     private lateinit var binding: FragmentSignUpBinding
     val viewModel: SignUpViewModel by viewModels()

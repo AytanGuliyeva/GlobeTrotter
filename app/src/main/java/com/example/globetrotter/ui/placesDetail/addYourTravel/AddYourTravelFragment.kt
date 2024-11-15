@@ -30,17 +30,27 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.UUID
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class AddYourTravelFragment : BottomSheetDialogFragment() {
     lateinit var binding: FragmentAddYourTravelBinding
-    private val viewModel: AddYourTravelViewModel by viewModels()
-    lateinit var auth: FirebaseAuth
-    lateinit var firestore: FirebaseFirestore
-    lateinit var storage: FirebaseStorage
+//    lateinit var auth: FirebaseAuth
+//    lateinit var firestore: FirebaseFirestore
+//    lateinit var storage: FirebaseStorage
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
     private lateinit var permissionResultLauncher: ActivityResultLauncher<String>
     private var selectPicture: Uri? = null
+    @Inject
+    lateinit var auth: FirebaseAuth
+
+    @Inject
+    lateinit var firestore: FirebaseFirestore
+
+    @Inject
+    lateinit var storage: FirebaseStorage
 
     companion object {
         fun newInstance(placesId: String): AddYourTravelFragment {

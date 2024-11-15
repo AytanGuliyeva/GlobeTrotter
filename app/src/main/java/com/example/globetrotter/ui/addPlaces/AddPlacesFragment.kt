@@ -22,18 +22,29 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.ByteArrayOutputStream
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class AddPlacesFragment : Fragment() {
     private lateinit var binding: FragmentAddPlacesBinding
     private var selectedImageBitmap: Bitmap? = null
     private val PICK_IMAGE_REQUEST = 71
-    lateinit var auth: FirebaseAuth
-    lateinit var firestore: FirebaseFirestore
-    lateinit var storage: FirebaseStorage
+//    lateinit var auth: FirebaseAuth
+//    lateinit var firestore: FirebaseFirestore
+//    lateinit var storage: FirebaseStorage
     private val selectedImages = mutableListOf<Bitmap>()
 
+
+    @Inject
+    lateinit var auth: FirebaseAuth
+
+    @Inject
+    lateinit var firestore: FirebaseFirestore
+
+    @Inject
+    lateinit var storage: FirebaseStorage
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,7 +78,7 @@ class AddPlacesFragment : Fragment() {
             galleryIntent.type = "image/*"
             galleryIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
             startActivityForResult(
-                Intent.createChooser(galleryIntent, "Select Pictures"),
+                Intent.createChooser(galleryIntent, getString(R.string.select_pictures)),
                 PICK_IMAGE_REQUEST
             )
         }
@@ -97,7 +108,8 @@ class AddPlacesFragment : Fragment() {
                 binding.imgAddPost.setImageBitmap(selectedImages[0])
             }
         } else {
-            Toast.makeText(requireContext(), "Something went wrong...", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(),
+                getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show()
         }
     }
 

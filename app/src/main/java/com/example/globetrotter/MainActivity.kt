@@ -15,8 +15,10 @@ import com.example.globetrotter.databinding.ActivityMainBinding
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.concurrent.TimeUnit
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -31,22 +33,14 @@ class MainActivity : AppCompatActivity() {
 
         auth = Firebase.auth
 
-//
-//        val workRequest: WorkRequest = OneTimeWorkRequest.Builder(SpecialDayWorker::class.java)
-//            .setInitialDelay(10, TimeUnit.SECONDS) // İşin 10 saniye sonra çalışması
-//            .build()
-//
-//        // WorkManager ile iş başlatma
-//        WorkManager.getInstance(this).enqueue(workRequest)
-        // Worker için OneTimeWorkRequest oluşturuluyor
-        val workRequest: OneTimeWorkRequest = OneTimeWorkRequest.Builder(SpecialDayWorker::class.java)
+      /*  val workRequest: OneTimeWorkRequest = OneTimeWorkRequest.Builder(SpecialDayWorker::class.java)
             .setInitialDelay(1, TimeUnit.DAYS)  // 1 gün sonra çalışmaya başla
             .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 10, TimeUnit.MINUTES)  // Başarısız olursa 10 dakika bekle
             .build()
 
         // WorkManager ile işi kuyruğa ekliyoruz
         WorkManager.getInstance(this).enqueue(workRequest)
-
+*/
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         navController = navHostFragment.navController

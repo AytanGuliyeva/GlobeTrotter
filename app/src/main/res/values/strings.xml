@@ -5,4 +5,6 @@
     <string name="welcome_to_globetrotter">Welcome to GlobeTrotter!</string>
     <string name="globetrotter">GlobeTrotter</string>
     <string name="click_the_visiter_and_look_their_overview">Click the visiter, and look their overview..</string>
+    <string name="select_pictures">Select Pictures</string>
+    <string name="something_went_wrong">Something went wrong...</string>
 </resources>

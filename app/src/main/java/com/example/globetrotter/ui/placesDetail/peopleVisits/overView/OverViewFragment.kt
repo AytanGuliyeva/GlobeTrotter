@@ -12,20 +12,28 @@ import com.bumptech.glide.Glide
 import com.example.globetrotter.R
 import com.example.globetrotter.base.Resource
 import com.example.globetrotter.databinding.FragmentOverViewBinding
-import com.example.globetrotter.ui.placesDetail.addYourTravel.AddYourTravelViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class OverViewFragment : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentOverViewBinding
-    private val viewModel: OverViewViewModel by viewModels()
+     val viewModel: OverViewViewModel by viewModels()
     private val args: OverViewFragmentArgs by navArgs()
 
+//    lateinit var auth: FirebaseAuth
+//    lateinit var firestore: FirebaseFirestore
+
+    @Inject
     lateinit var auth: FirebaseAuth
+
+    @Inject
     lateinit var firestore: FirebaseFirestore
 
     companion object {

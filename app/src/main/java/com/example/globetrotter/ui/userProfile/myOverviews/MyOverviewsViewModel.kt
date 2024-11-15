@@ -10,10 +10,16 @@ import com.example.globetrotter.data.Users
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class MyOverviewsViewModel : ViewModel() {
-    private val firestore = FirebaseFirestore.getInstance()
-    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+@HiltViewModel
+class MyOverviewsViewModel @Inject constructor(
+    val firestore: FirebaseFirestore,
+    val auth: FirebaseAuth
+) : ViewModel() {
+//    private val firestore = FirebaseFirestore.getInstance()
+//    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     private val _storyInformation = MutableLiveData<Resource<Map<String, Story>>>()
     val storyInformation: LiveData<Resource<Map<String, Story>>>

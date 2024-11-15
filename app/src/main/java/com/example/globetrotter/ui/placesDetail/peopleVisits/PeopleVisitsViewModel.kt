@@ -9,13 +9,19 @@ import com.example.globetrotter.data.Users
 import com.example.globetrotter.base.Resource
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class PeopleVisitsViewModel : ViewModel() {
-    private val firestore: FirebaseFirestore = Firebase.firestore
+@HiltViewModel
+class PeopleVisitsViewModel @Inject constructor(
+    val firestore: FirebaseFirestore
+) : ViewModel() {
+   // private val firestore: FirebaseFirestore = Firebase.firestore
 
     private val _peopleList = MutableLiveData<Resource<List<Users>>>()
     val peopleList: LiveData<Resource<List<Users>>> = _peopleList

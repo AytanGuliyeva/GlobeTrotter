@@ -75,4 +75,16 @@
         app:layout_constraintTop_toBottomOf="@id/view2"
         tools:listitem="@layout/item_people_visits" />
 
+    <TextView
+        android:id="@+id/noPost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawablePadding="5dp"
+        android:text="No Visiters!"
+        android:textSize="20dp"
+        app:drawableEndCompat="@drawable/travel_illustration"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view2" />
 </androidx.constraintlayout.widget.ConstraintLayout>
